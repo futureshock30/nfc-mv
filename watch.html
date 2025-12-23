@@ -14,7 +14,7 @@
   /* ★ 動画を下げる量（ここだけ触ればOK） */
   --video-offset: 125px;
 
-     /* ===== 各パーツの“間”（少しだけ遅く） ===== */
+  /* ===== 各パーツの“間”（少しだけ遅く） ===== */
   --d-edition: 950ms;
   --d-logo: 1550ms;
   --d-count: 2450ms;
@@ -162,12 +162,18 @@ iframe{
   font-size: 56px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+
+  /* ★ 追加：数字に控えめな“発光” */
+  text-shadow: 0 0 8px rgba(255,255,255,.15);
 }
 
 .count .remaining.bottom-note{
   margin-top: 20px;
   font-size: 11px;
-  letter-spacing: 0.18em;
+
+  /* ★ 追加：下テキストの空気感 */
+  letter-spacing: 0.22em;
+
   color: rgba(255,255,255,.65);
   line-height: 1.6;
 }
@@ -251,10 +257,10 @@ const pad2 = n => String(n).padStart(2, "0");
 document.getElementById("editionText").textContent =
   `［ Edition ${CONFIG.editionCurrent} / ${CONFIG.editionTotal} ］`;
 
-/* Remaining（THIS MONTHなし） */
+/* Remaining */
 const remaining = Math.max(0, CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth);
 document.getElementById("remainingText").innerHTML =
-  ` YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES `;
+  `YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES`;
 
 /* CSS変数のmsをJSでも使う（ズレ防止） */
 const css = getComputedStyle(document.documentElement);
@@ -274,7 +280,7 @@ setTimeout(() => {
       clearInterval(timer);
     }
     numEl.textContent = pad2(cur);
-  }, 160); // ★ 前より少しだけゆったり
+  }, 160);
 }, dNumber);
 
 /* 動画解禁 */
