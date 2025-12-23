@@ -10,7 +10,7 @@
   --bg:#000;
   --fg:#fff;
   --muted2: rgba(255,255,255,.5);
-  --t: 3; /* スロー倍率 */
+  --t: 3;
 }
 
 html, body {
@@ -36,7 +36,7 @@ html, body {
 }
 
 #logo {
-  width: 380px;              /* ロゴ少し大きく */
+  width: 380px;
   max-width: 90vw;
   opacity: 0;
   transform: translateY(10px) scale(.9);
@@ -52,7 +52,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 110px;        /* 動画フレームを少し上に */
+  padding-top: 90px;
   box-sizing: border-box;
 }
 
@@ -60,7 +60,7 @@ html, body {
 .video-wrap {
   width: min(92vw, 900px);
   aspect-ratio: 16 / 9;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   opacity: 0;
   transform: translateY(18px) scale(.985);
   filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
@@ -70,24 +70,17 @@ html, body {
 }
 .video-wrap.active { pointer-events: auto; }
 
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: #000;
-}
-
-/* ===== Edition（動画下） ===== */
+/* ===== Edition ===== */
 .edition {
-  margin-top: 16px;
-  font-size: 17px;           /* もう少し大きく */
+  margin-top: 18px;
+  margin-bottom: 42px;   /* ★ PLAYとの距離を広げる */
+  font-size: 17px;
   letter-spacing: 0.18em;
   opacity: 0;
   position: relative;
   color: rgba(255,255,255,.9);
   transform: translateY(8px);
   animation: editionIn calc(1500ms * var(--t)) ease forwards;
-  animation-delay: calc(0ms * var(--t));
   text-align: center;
   overflow: hidden;
 }
@@ -112,8 +105,9 @@ iframe {
   animation-delay: calc(600ms * var(--t));
 }
 
-/* ===== カウント ===== */
+/* ===== PLAY COUNT ===== */
 .count {
+  margin-top: 24px;       /* ★ 全体を下げる */
   text-align: center;
   opacity: 0;
   transform: translateY(14px);
@@ -131,19 +125,14 @@ iframe {
 .count .num {
   font-size: 56px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-/* YOU CAN PLAY（小さく・一番下・角カッコ） */
 .count .remaining.bottom-note{
   margin-top: 22px;
   font-size: 11px;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,.65);
-  line-height: 1.6;
-}
-.count .remaining.bottom-note strong{
-  color:#fff;
-  font-weight:600;
 }
 
 /* ===== アニメーション ===== */
@@ -152,32 +141,21 @@ iframe {
   60%  { opacity:1; transform: translateY(0) scale(1.03); }
   100% { opacity:1; transform: translateY(0) scale(1); }
 }
-
-@keyframes editionIn {
-  to { opacity:1; transform: translateY(0); }
-}
-
+@keyframes editionIn { to { opacity:1; transform: translateY(0); } }
 @keyframes shimmer {
   0%   { opacity:0; left:-60%; }
   20%  { opacity:.9; }
   100% { opacity:0; left:140%; }
 }
-
 @keyframes countPop {
   0%   { opacity:0; transform: translateY(16px) scale(.98); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
   100% { opacity:1; transform: translateY(0) scale(1); }
 }
-
 @keyframes videoIn {
   0%   { opacity:0; transform: translateY(20px) scale(.985); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
   100% { opacity:1; transform: translateY(0) scale(1); }
-}
-
-/* motion配慮 */
-@media (prefers-reduced-motion: reduce){
-  * { animation: none !important; opacity:1 !important; transform:none !important; }
 }
 </style>
 </head>
@@ -197,23 +175,19 @@ iframe {
     </iframe>
   </div>
 
-  <!-- Edition：動画フレームの下（角カッコ表記） -->
   <div class="edition" id="editionText">
     ［ Edition 1 / 300 ］
   </div>
 
   <div class="count">
     <div class="label">PLAY COUNT THIS MONTH</div>
-    <div class="num" id="playCountNum">0</div>
-
-    <!-- YOU CAN PLAY：一番下（THIS MONTHなし） -->
+    <div class="num" id="playCountNum">00</div>
     <div class="remaining bottom-note" id="remainingText"></div>
   </div>
 
 </div>
 
 <script>
-/* ===== 設定（仮） ===== */
 const CONFIG = {
   editionCurrent: 1,
   editionTotal: 300,
@@ -221,33 +195,30 @@ const CONFIG = {
   playedThisMonth: 1
 };
 
-/* スロー倍率（CSSと合わせる） */
 const T = 3;
+const pad2 = n => String(n).padStart(2,"0");
 
-/* Edition：角カッコ＆スラッシュ区切り */
+/* Edition */
 document.getElementById("editionText").textContent =
   `［ Edition ${CONFIG.editionCurrent} / ${CONFIG.editionTotal} ］`;
 
 /* Remaining */
 const remaining = Math.max(0, CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth);
-
-/* THIS MONTH なし＆角カッコ */
 document.getElementById("remainingText").innerHTML =
   `［ YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES ］`;
 
-/* 00 → 01 の数字アニメーション */
+/* 00 → 01 */
 const numEl = document.getElementById("playCountNum");
 let cur = 0;
-const target = CONFIG.playedThisMonth;
 
 setTimeout(() => {
   const timer = setInterval(() => {
-    cur += 1;
-    if (cur >= target) {
-      cur = target;
+    cur++;
+    if (cur >= CONFIG.playedThisMonth) {
+      cur = CONFIG.playedThisMonth;
       clearInterval(timer);
     }
-    numEl.textContent = cur;
+    numEl.textContent = pad2(cur);
   }, 240 * T);
 }, 4500 * T);
 
