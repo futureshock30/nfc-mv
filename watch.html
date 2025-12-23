@@ -16,49 +16,46 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     }
 
-    /* ロゴ固定バー */
+    /* ロゴ固定バー（大きく） */
     .logo-bar {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 56px;
+      height: 96px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       backdrop-filter: blur(6px);
       z-index: 10;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
     #logo {
-      height: 34px;
+      height: 56px; /* ← ロゴ大きく */
       width: auto;
-      display: block;
       opacity: 0;
-      transform: scale(0.98);
+      transform: scale(0.96);
       animation: fadeIn 700ms ease forwards;
     }
 
-    /* 全体ラップ */
+    /* 全体 */
     .wrap {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 56px;
+      height: 100vh;
+      padding-top: 96px; /* ロゴ分 */
       box-sizing: border-box;
-    }
-
-    /* カウント表示 */
-    #countArea {
-      flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+    }
+
+    /* カウント */
+    #countArea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
     }
 
     #label {
@@ -69,15 +66,13 @@
 
     #countdown {
       font-size: 64px;
-      letter-spacing: 0.05em;
       animation: pop 450ms ease;
     }
 
-    /* MV */
+    /* 動画：完全センター */
     #videoArea {
       display: none;
       width: min(960px, 92vw);
-      margin-bottom: 24px;
     }
 
     .video-frame {
@@ -100,9 +95,9 @@
 
 <body>
 
-  <!-- ロゴ（GitHubに置いた logo.png を使用） -->
+  <!-- ロゴ -->
   <div class="logo-bar">
-    <img id="logo" alt="Future Shock Logo" src="./logo.png" />
+    <img id="logo" src="./logo.png" alt="Future Shock Logo">
   </div>
 
   <div class="wrap">
@@ -125,12 +120,7 @@
   </div>
 
   <script>
-    /*
-      今月の再生回数（仮）
-      後で tap → watch で差し込む
-    */
     const currentViewCount = 1;
-
     const remaining = 10 - currentViewCount;
 
     const countdownEl = document.getElementById("countdown");
@@ -139,12 +129,10 @@
 
     countdownEl.textContent = remaining;
 
-    // カウントの「ポン」演出
     countdownEl.style.animation = "none";
     void countdownEl.offsetWidth;
     countdownEl.style.animation = "pop 450ms ease";
 
-    // 2秒後にMV再生（ロゴは残る）
     setTimeout(() => {
       countArea.style.display = "none";
       videoArea.style.display = "block";
