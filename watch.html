@@ -16,10 +16,10 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== ロゴ ===== */
+/* ===== ロゴ（最上部・デカく） ===== */
 .logo-area {
   position: fixed;
-  top: 24px;
+  top: 32px;            /* 画面の一番上 */
   left: 0;
   right: 0;
   display: flex;
@@ -28,29 +28,29 @@ html, body {
 }
 
 #logo {
-  width: 220px; /* ← ロゴを大きく */
-  max-width: 70vw;
+  width: 380px;         /* ← ここでロゴサイズ調整 */
+  max-width: 80vw;
   opacity: 0;
-  transform: translateY(10px) scale(0.95);
+  transform: translateY(12px) scale(0.95);
   animation: logoIn 1s ease forwards;
 }
 
-/* ===== レイアウト ===== */
+/* ===== 全体レイアウト ===== */
 .main {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding-top: 120px; /* ロゴ分 */
+  padding-top: 160px;   /* ← ロゴ分の余白 */
   box-sizing: border-box;
 }
 
-/* ===== 動画 ===== */
+/* ===== 動画（少し上） ===== */
 .video-wrap {
   width: min(92vw, 900px);
   aspect-ratio: 16 / 9;
-  margin-bottom: 48px;
+  margin-top: -40px;    /* ← 動画を上に寄せる */
+  margin-bottom: 56px;
 }
 
 iframe {
@@ -60,7 +60,7 @@ iframe {
   background: #000;
 }
 
-/* ===== カウント ===== */
+/* ===== カウント（下） ===== */
 .count {
   text-align: center;
   opacity: 0;
@@ -72,20 +72,21 @@ iframe {
   font-size: 13px;
   letter-spacing: 0.25em;
   opacity: 0.6;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .count .num {
   font-size: 56px;
 }
 
-/* ===== アニメ ===== */
+/* ===== アニメーション ===== */
 @keyframes logoIn {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes fadeUp {
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
@@ -97,10 +98,10 @@ iframe {
   <img id="logo" src="./logo.png" alt="Future Shock Logo">
 </div>
 
-<!-- 中央 -->
+<!-- メイン -->
 <div class="main">
 
-  <!-- 動画（中央ど真ん中） -->
+  <!-- 動画（中央寄り・やや上） -->
   <div class="video-wrap">
     <iframe
       src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
@@ -108,7 +109,7 @@ iframe {
     </iframe>
   </div>
 
-  <!-- カウント（下） -->
+  <!-- カウント -->
   <div class="count">
     <div class="label">PLAY COUNT THIS MONTH</div>
     <div class="num">1</div>
