@@ -4,28 +4,94 @@
     <meta charset="UTF-8">
     <title>NFCカウントダウン</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        #logo { margin-top: 50px; }
-        #countdown { font-size: 2em; margin-top: 20px; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #logo {
+            width: 200px;
+            margin-bottom: 24px;
+            animation: fadeIn 1.2s ease forwards;
+        }
+
+        #countdown {
+            font-size: 48px;
+            letter-spacing: 2px;
+            margin-bottom: 32px;
+            animation: pop 0.6s ease;
+        }
+
+        #video {
+            display: none;
+            width: 90%;
+            max-width: 960px;
+            height: 540px;
+            border: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <img id="logo" src="your-logo.png" alt="Future Shock Logo" width="200">
 
+    <!-- ロゴ -->
+    <img id="logo" src="your-logo.png" alt="Future Shock Logo">
+
+    <!-- カウント表示 -->
     <div id="countdown"></div>
 
+    <!-- Google Drive 動画 -->
+    <iframe
+        id="video"
+        src="https://drive.google.com/file/d/1utndYM11B_aouqe8dj-Bngl4BJjGRpcZ/preview"
+        allow="autoplay"
+    ></iframe>
+
     <script>
-        // サーバーから視聴回数を取得する想定で仮の視聴回数をセット（例：3回目の視聴）
-        // 実際にはここをサーバー側で動的に埋め込む
-        const currentViewCount = 3; 
+        /*
+          サーバーから渡される想定の再生回数
+          例：
+          1回目 → currentViewCount = 1 → 10 → 9
+          2回目 → currentViewCount = 2 → 9 → 8
+        */
+        const currentViewCount = 1; // ← 今は仮。あとでサーバーから差し込む
 
-        // 初期値を10から視聴回数分引いた数字にする
-        let count = 10 - currentViewCount;
+        const remaining = 10 - currentViewCount;
+        const countdownEl = document.getElementById("countdown");
+        const videoEl = document.getElementById("video");
 
-        // カウントダウンを表示
-        document.getElementById('countdown').textContent = count;
+        // 表示
+        countdownEl.textContent = remaining;
 
-        // 必要ならここでカウントダウン後のアクションを追加
+        // 数字エフェクト（ポン）
+        countdownEl.classList.remove("pop");
+        void countdownEl.offsetWidth;
+        countdownEl.classList.add("pop");
+
+        // 2秒後にMV再生
+        setTimeout(() => {
+            countdownEl.style.display = "none";
+            videoEl.style.display = "block";
+        }, 2000);
     </script>
+
 </body>
 </html>
