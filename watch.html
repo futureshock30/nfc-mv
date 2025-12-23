@@ -6,249 +6,275 @@
 <title>NFC Watch</title>
 
 <style>
-  :root{
-    --bg:#000;
-    --fg:#fff;
-    --muted: rgba(255,255,255,.62);
-    --muted2: rgba(255,255,255,.42);
-  }
+:root{
+  --bg:#000;
+  --fg:#fff;
+  --muted: rgba(255,255,255,.65);
+  --muted2: rgba(255,255,255,.45);
+}
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
-  /* ===== ロゴ＋エディション（固定・最上部） ===== */
-  .logo-area {
-    position: fixed;
-    top: 6px;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
-    pointer-events: none;
-  }
+/* ===== ロゴ＋エディション（固定） ===== */
+.logo-area {
+  position: fixed;
+  top: 6px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
 
-  #logo {
-    width: 340px;
-    max-width: 88vw;
-    opacity: 0;
-    transform: translateY(8px) scale(.90);
-    filter: drop-shadow(0 10px 40px rgba(0,0,0,.65));
-    animation: logoPop 900ms cubic-bezier(.2,.9,.2,1) forwards;
-  }
+#logo {
+  width: 340px;
+  max-width: 88vw;
+  opacity: 0;
+  transform: translateY(10px) scale(.9);
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
+  animation: logoPop 2700ms cubic-bezier(.2,.9,.2,1) forwards;
+}
 
-  /* Edition：シマー（キラーン） */
-  .edition {
-    margin-top: 10px;
-    font-size: 15px;
-    letter-spacing: 0.14em;
-    opacity: 0;
-    position: relative;
-    color: rgba(255,255,255,.78);
-    transform: translateY(6px);
-    animation: editionIn 520ms ease forwards;
-    animation-delay: 820ms; /* ロゴの後 */
-    overflow: hidden;
-  }
-  .edition::after{
-    content:"";
-    position:absolute;
-    top:-40%;
-    left:-60%;
-    width: 40%;
-    height: 180%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,.55), transparent);
-    transform: rotate(18deg);
-    opacity: 0;
-    animation: shimmer 950ms ease forwards;
-    animation-delay: 1150ms;
-  }
+/* ===== Edition（キラーン） ===== */
+.edition {
+  margin-top: 10px;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  position: relative;
+  color: rgba(255,255,255,.8);
+  transform: translateY(8px);
+  animation: editionIn 1500ms ease forwards;
+  animation-delay: 2400ms;
+  overflow: hidden;
+}
 
-  /* ちっちゃいスパーク（2つ） */
-  .spark{
-    position:absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.9);
-    box-shadow: 0 0 12px rgba(255,255,255,.8);
-    opacity: 0;
-    transform: scale(.6);
-    pointer-events:none;
-  }
-  .spark.s1{ right:-10px; top: 30%; animation: spark 520ms ease forwards; animation-delay: 1240ms; }
-  .spark.s2{ right: 10px; top: -20%; animation: spark 520ms ease forwards; animation-delay: 1340ms; }
+.edition::after{
+  content:"";
+  position:absolute;
+  top:-40%;
+  left:-60%;
+  width: 40%;
+  height: 180%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.55),
+    transparent
+  );
+  transform: rotate(18deg);
+  opacity: 0;
+  animation: shimmer 2800ms ease forwards;
+  animation-delay: 3000ms;
+}
 
-  /* ===== メイン（中央寄せのまま） ===== */
-  .main {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    padding-top: 140px; /* ロゴ＋エディション分 */
-  }
+/* spark */
+.spark{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 0 12px rgba(255,255,255,.8);
+  opacity:0;
+}
+.spark.s1{
+  right:-10px;
+  top:30%;
+  animation: spark 1500ms ease forwards;
+  animation-delay: 3200ms;
+}
+.spark.s2{
+  right:10px;
+  top:-20%;
+  animation: spark 1500ms ease forwards;
+  animation-delay: 3500ms;
+}
 
-  /* ===== 動画（最後にジャーン） ===== */
-  .video-wrap {
-    width: min(92vw, 900px);
-    aspect-ratio: 16 / 9;
-    margin-bottom: 72px;
-    opacity: 0;
-    transform: translateY(14px) scale(.985);
-    filter: drop-shadow(0 18px 40px rgba(0,0,0,.55));
-    animation: videoIn 720ms cubic-bezier(.2,.9,.2,1) forwards;
-    animation-delay: 2200ms; /* 一番最後 */
-  }
+/* ===== メイン ===== */
+.main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 140px;
+  box-sizing: border-box;
+}
 
-  iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #000;
-    border-radius: 2px; /* 角丸は好み。要らなければ0に */
-  }
+/* ===== 動画（最後にジャーン） ===== */
+.video-wrap {
+  width: min(92vw, 900px);
+  aspect-ratio: 16 / 9;
+  margin-bottom: 72px;
+  opacity: 0;
+  transform: translateY(18px) scale(.985);
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
+  animation: videoIn 2200ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: 6000ms;
+  pointer-events: none;
+}
 
-  /* ===== カウント（残り→月間→数字） ===== */
-  .count {
-    text-align: center;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: countPop 520ms cubic-bezier(.2,.9,.2,1) forwards;
-    animation-delay: 1700ms; /* Editionの後 */
-  }
+.video-wrap.active {
+  pointer-events: auto;
+}
 
-  .count .remaining {
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    color: rgba(255,255,255,.72);
-    margin-bottom: 14px;
-  }
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
 
-  .count .label {
-    font-size: 13px;
-    letter-spacing: 0.25em;
-    color: var(--muted2);
-    margin-bottom: 10px;
-  }
+/* ===== カウント ===== */
+.count {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: countPop 1500ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: 4200ms;
+}
 
-  .count .num {
-    font-size: 56px;
-    line-height: 1;
-  }
+.count .remaining {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,.75);
+  margin-bottom: 16px;
+}
 
-  /* ===== アニメーション ===== */
-  @keyframes logoPop {
-    0%   { opacity:0; transform: translateY(10px) scale(.88); }
-    55%  { opacity:1; transform: translateY(0) scale(1.02); }
-    100% { opacity:1; transform: translateY(0) scale(1); }
-  }
-  @keyframes editionIn{
-    to { opacity:.95; transform: translateY(0); }
-  }
-  @keyframes shimmer{
-    0%   { opacity:0; left:-60%; }
-    20%  { opacity:.9; }
-    100% { opacity:0; left:140%; }
-  }
-  @keyframes spark{
-    0%   { opacity:0; transform: scale(.4); }
-    40%  { opacity:1; transform: scale(1.05); }
-    100% { opacity:0; transform: scale(.6); }
-  }
-  @keyframes countPop{
-    0%   { opacity:0; transform: translateY(12px) scale(.985); }
-    70%  { opacity:1; transform: translateY(0) scale(1.01); }
-    100% { opacity:1; transform: translateY(0) scale(1); }
-  }
-  @keyframes videoIn{
-    0%   { opacity:0; transform: translateY(16px) scale(.985); }
-    70%  { opacity:1; transform: translateY(0) scale(1.01); }
-    100% { opacity:1; transform: translateY(0) scale(1); }
-  }
+.count .label {
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  color: var(--muted2);
+  margin-bottom: 10px;
+}
 
-  /* “動きを減らす”設定の人への配慮 */
-  @media (prefers-reduced-motion: reduce){
-    #logo, .edition, .count, .video-wrap { animation: none; opacity:1; transform:none; }
-    .edition::after, .spark { display:none; }
-  }
+.count .num {
+  font-size: 56px;
+  line-height: 1;
+}
+
+/* ===== アニメーション ===== */
+@keyframes logoPop {
+  0%   { opacity:0; transform: translateY(12px) scale(.88); }
+  60%  { opacity:1; transform: translateY(0) scale(1.03); }
+  100% { opacity:1; transform: translateY(0) scale(1); }
+}
+
+@keyframes editionIn {
+  to { opacity:1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { opacity:0; left:-60%; }
+  20%  { opacity:.9; }
+  100% { opacity:0; left:140%; }
+}
+
+@keyframes spark {
+  0%   { opacity:0; transform: scale(.4); }
+  50%  { opacity:1; transform: scale(1.1); }
+  100% { opacity:0; transform: scale(.6); }
+}
+
+@keyframes countPop {
+  0%   { opacity:0; transform: translateY(16px) scale(.98); }
+  70%  { opacity:1; transform: translateY(0) scale(1.02); }
+  100% { opacity:1; transform: translateY(0) scale(1); }
+}
+
+@keyframes videoIn {
+  0%   { opacity:0; transform: translateY(20px) scale(.985); }
+  70%  { opacity:1; transform: translateY(0) scale(1.02); }
+  100% { opacity:1; transform: translateY(0) scale(1); }
+}
+
+/* motion配慮 */
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; opacity:1 !important; transform:none !important; }
+}
 </style>
 </head>
 
 <body>
 
-  <!-- ロゴ＋エディション -->
-  <div class="logo-area">
-    <img id="logo" src="./logo.png" alt="Future Shock Logo" />
-    <div class="edition" id="editionText">
-      Edition 1/300
-      <span class="spark s1"></span>
-      <span class="spark s2"></span>
-    </div>
+<div class="logo-area">
+  <img id="logo" src="./logo.png" alt="Future Shock Logo">
+  <div class="edition" id="editionText">
+    Edition 1/300
+    <span class="spark s1"></span>
+    <span class="spark s2"></span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="video-wrap" id="videoWrap">
+    <iframe
+      src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
+      allow="autoplay">
+    </iframe>
   </div>
 
-  <!-- メイン -->
-  <div class="main">
-
-    <!-- 動画（最後に出る） -->
-    <div class="video-wrap" id="videoWrap">
-      <iframe
-        src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
-        allow="autoplay"
-      ></iframe>
-    </div>
-
-    <!-- カウント（残り→月間→数字） -->
-    <div class="count">
-      <div class="remaining" id="remainingText">YOU CAN PLAY 9 MORE TIMES THIS MONTH</div>
-      <div class="label">PLAY COUNT THIS MONTH</div>
-      <div class="num" id="playCountNum">1</div>
-    </div>
-
+  <div class="count">
+    <div class="remaining" id="remainingText"></div>
+    <div class="label">PLAY COUNT THIS MONTH</div>
+    <div class="num" id="playCountNum">0</div>
   </div>
+
+</div>
 
 <script>
-  // ==== ここだけ変えればOK ====
-  const CONFIG = {
-    editionCurrent: 1,
-    editionTotal: 300,
-    maxPlaysPerMonth: 10,
-    playedThisMonth: 1,
-  };
+/* ===== 設定 ===== */
+const CONFIG = {
+  editionCurrent: 1,
+  editionTotal: 300,
+  maxPlaysPerMonth: 10,
+  playedThisMonth: 1
+};
 
-  // 表示に反映
-  const remaining = Math.max(0, CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth);
+/* ===== 反映 ===== */
+document.getElementById("editionText").childNodes[0].nodeValue =
+  `Edition ${CONFIG.editionCurrent}/${CONFIG.editionTotal}`;
 
-  document.getElementById("editionText").childNodes[0].nodeValue =
-    `Edition ${CONFIG.editionCurrent}/${CONFIG.editionTotal}`;
+const remaining = Math.max(
+  0,
+  CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth
+);
 
-  document.getElementById("playCountNum").textContent = CONFIG.playedThisMonth;
-  document.getElementById("remainingText").textContent =
-    `YOU CAN PLAY ${remaining} MORE TIMES THIS MONTH`;
+document.getElementById("remainingText").textContent =
+  `YOU CAN PLAY ${remaining} MORE TIMES THIS MONTH`;
 
-  // 数字をちょいリッチに：最後にカウントアップ（お好み）
-  // ※不要ならこの下まるごと消してOK
-  const numEl = document.getElementById("playCountNum");
-  const target = CONFIG.playedThisMonth;
-  numEl.textContent = "0";
-  setTimeout(() => {
-    let cur = 0;
-    const step = Math.max(1, Math.floor(target / 10));
-    const timer = setInterval(() => {
-      cur += step;
-      if (cur >= target) { cur = target; clearInterval(timer); }
-      numEl.textContent = String(cur);
-    }, 40);
-  }, 1750); // countPopの出現と同じくらい
+/* ===== 数字カウント（ゆっくり） ===== */
+const numEl = document.getElementById("playCountNum");
+let cur = 0;
+const target = CONFIG.playedThisMonth;
+
+setTimeout(() => {
+  const timer = setInterval(() => {
+    cur += 1;
+    if (cur >= target) {
+      cur = target;
+      clearInterval(timer);
+    }
+    numEl.textContent = cur;
+  }, 120);
+}, 4500);
+
+/* ===== 動画クリック解禁 ===== */
+setTimeout(() => {
+  document.getElementById("videoWrap").classList.add("active");
+}, 6000);
 </script>
 
 </body>
