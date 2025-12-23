@@ -254,7 +254,7 @@ document.getElementById("editionText").textContent =
 /* Remaining（THIS MONTHなし） */
 const remaining = Math.max(0, CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth);
 document.getElementById("remainingText").innerHTML =
-  `［ YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES ］`;
+  ` YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES `;
 
 /* CSS変数のmsをJSでも使う（ズレ防止） */
 const css = getComputedStyle(document.documentElement);
