@@ -5,38 +5,58 @@
   <title>Watch</title>
 </head>
 
-<body style="margin:0;background:black;color:white;display:flex;align-items:center;justify-content:center;height:100vh;font-size:48px;">
-  <div id="msg">CHECKING...</div>
+<body style="
+  margin:0;
+  background:black;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  font-size:32px;
+">
+
+  <div id="container">CHECKING...</div>
 
   <script>
     // URLから key を読む
     const params = new URLSearchParams(location.search);
     const key = params.get("key");
+    const container = document.getElementById("container");
 
-    // ① keyが無い → 直アクセス扱いで拒否
+    // ① keyが無い → 直アクセス拒否
     if (!key) {
-      document.getElementById("msg").innerText = "ACCESS DENIED";
+      container.innerText = "ACCESS DENIED";
       throw new Error("no key");
     }
 
-    // ② keyの中身が「nfc-」で始まってない → 変なURL扱いで拒否
+    // ② key形式チェック
     if (!key.startsWith("nfc-")) {
-      document.getElementById("msg").innerText = "ACCESS DENIED";
+      container.innerText = "ACCESS DENIED";
       throw new Error("bad key");
     }
 
-    // ③ 3分制限（Date.now()の数字が入ってる前提）
+    // ③ 3分制限
     const ts = Number(key.replace("nfc-", ""));
     const ageMs = Date.now() - ts;
-    const maxMs = 3 * 60 * 1000; // 3分
+    const maxMs = 3 * 60 * 1000;
 
     if (!Number.isFinite(ts) || ageMs > maxMs) {
-      document.getElementById("msg").innerText = "EXPIRED";
+      container.innerText = "EXPIRED";
       throw new Error("expired");
     }
 
-    // OK → まずは成功表示（次にMV再生に変える）
-    document.getElementById("msg").innerText = "NFC VERIFIED";
+    // ✅ ここまで来たら再生
+    container.innerHTML = `
+      <iframe
+        src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
+        width="100%"
+        height="100%"
+        allow="autoplay"
+        style="border:none;"
+      ></iframe>
+    `;
   </script>
+
 </body>
 </html>
