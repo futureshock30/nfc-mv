@@ -16,14 +16,14 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ロゴとエディション表示 */
+/* ===== ロゴ＋エディション ===== */
 .logo-area {
   position: fixed;
-  top: 6px; /* ロゴを上に寄せる */
+  top: 6px;
   left: 0;
   right: 0;
   display: flex;
-  flex-direction: column; /* 縦並びに */
+  flex-direction: column;
   align-items: center;
   z-index: 10;
 }
@@ -31,19 +31,20 @@ html, body {
 #logo {
   width: 340px;
   max-width: 88vw;
-  margin-bottom: 4px; /* ロゴ下に少し余白 */
   opacity: 0;
   transform: translateY(10px) scale(0.96);
   animation: logoIn 1s ease forwards;
 }
 
+/* ★ エディション調整ここ */
 .edition {
-  font-size: 12px;
-  opacity: 0.8;
-  margin-top: 4px;
+  margin-top: 8px;          /* ← ロゴとの間 */
+  font-size: 14px;          /* ← 少し大きく */
+  letter-spacing: 0.12em;
+  opacity: 0.75;
 }
 
-/* メインコンテンツ */
+/* ===== メイン ===== */
 .main {
   height: 100vh;
   display: flex;
@@ -51,14 +52,14 @@ html, body {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding-top: 120px; /* ロゴ分の余白 */
+  padding-top: 140px;       /* ← ロゴ＋エディション分 */
 }
 
-/* 動画エリア */
+/* ===== 動画 ===== */
 .video-wrap {
   width: min(92vw, 900px);
   aspect-ratio: 16 / 9;
-  margin-bottom: 48px;
+  margin-bottom: 72px;      /* ← カウントを下に */
 }
 
 iframe {
@@ -68,7 +69,7 @@ iframe {
   background: #000;
 }
 
-/* カウント表示 */
+/* ===== カウント ===== */
 .count {
   text-align: center;
   opacity: 0;
@@ -87,7 +88,7 @@ iframe {
   font-size: 56px;
 }
 
-/* アニメーション */
+/* ===== アニメーション ===== */
 @keyframes logoIn {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
@@ -101,16 +102,16 @@ iframe {
 
 <body>
 
-<!-- ロゴとエディション表示 -->
+<!-- ロゴ＋エディション -->
 <div class="logo-area">
   <img id="logo" src="./logo.png" alt="Future Shock Logo">
   <div class="edition">Edition 1/300</div>
 </div>
 
-<!-- メインコンテンツ -->
+<!-- メイン -->
 <div class="main">
 
-  <!-- 動画エリア -->
+  <!-- 動画 -->
   <div class="video-wrap">
     <iframe
       src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
