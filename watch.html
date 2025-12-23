@@ -11,87 +11,119 @@
   --fg:#fff;
   --muted2: rgba(255,255,255,.5);
 
-  /* ★ 全体ペースを少し早める */
-  --t: 2.2;
+  /* ===== 各パーツの“間”だけ詰める（ms） ===== */
+  --d-edition: 600ms;   /* Edition開始 */
+  --d-logo: 1050ms;     /* ロゴ開始 */
+  --d-count: 1650ms;    /* PLAYブロック開始 */
+  --d-number: 1950ms;   /* 00→01開始 */
+  --d-video: 2550ms;    /* 動画フレーム開始 */
+  --d-unlock: 2550ms;   /* 動画クリック解禁 */
+
+  /* 各アニメの長さ */
+  --t-edition: 700ms;
+  --t-logo: 900ms;
+  --t-count: 800ms;
+  --t-video: 900ms;
+  --t-shimmer: 1200ms;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+html, body{
+  margin:0; padding:0;
+  width:100%; height:100%;
   background: var(--bg);
   color: var(--fg);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== ロゴ ===== */
-.logo-area {
+/* ===== ロゴ（固定） ===== */
+.logo-area{
   position: fixed;
   top: 6px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 10;
-  pointer-events: none;
+  left: 0; right: 0;
+  display:flex;
+  justify-content:center;
+  z-index:10;
+  pointer-events:none;
 }
 
-#logo {
-  width: 380px;
+#logo{
+  width: 380px;          /* 少し大きく */
   max-width: 90vw;
   opacity: 0;
   transform: translateY(10px) scale(.9);
   filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
-  animation: logoPop calc(2700ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: calc(1200ms * var(--t));
+  animation: logoPop var(--t-logo) cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: var(--d-logo);
 }
 
-/* ===== メイン ===== */
-.main {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* ===== メイン（動画位置がブレない構造） ===== */
+.main{
+  min-height: 100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  /* ★ “上からの開始位置”をここで固定 */
   padding-top: 90px;
-  box-sizing: border-box;
+  box-sizing:border-box;
+}
+
+/* 上段：動画＋Edition */
+.top-stack{
+  width: 100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* ★ ここがポイント：下に押すのはmarginではなくスペーサー */
+.spacer{
+  flex: 1;              /* 余った高さを全部ここが吸う */
+}
+
+/* 下段：PLAYブロック */
+.bottom-stack{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  padding-bottom: 44px; /* 下の余白 */
+  box-sizing:border-box;
 }
 
 /* ===== 動画 ===== */
-.video-wrap {
+.video-wrap{
   width: min(92vw, 900px);
   aspect-ratio: 16 / 9;
-  margin-bottom: 6px;
+  margin-top: 0;
   opacity: 0;
   transform: translateY(18px) scale(.985);
   filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
-  animation: videoIn calc(2200ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: calc(5200ms * var(--t));
+  animation: videoIn var(--t-video) cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: var(--d-video);
   pointer-events: none;
 }
-.video-wrap.active { pointer-events: auto; }
+.video-wrap.active{ pointer-events:auto; }
 
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: #000;
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  background:#000;
 }
 
-/* ===== Edition ===== */
-.edition {
-  margin-top: 18px;
-  margin-bottom: 56px;   /* ★ PLAYとの距離をさらに確保 */
+/* ===== Edition（動画の下） ===== */
+.edition{
+  margin-top: 16px;
   font-size: 17px;
   letter-spacing: 0.18em;
   opacity: 0;
   position: relative;
   color: rgba(255,255,255,.9);
   transform: translateY(8px);
-  animation: editionIn calc(1300ms * var(--t)) ease forwards;
-  text-align: center;
-  overflow: hidden;
+  animation: editionIn var(--t-edition) ease forwards;
+  animation-delay: var(--d-edition);
+  text-align:center;
+  overflow:hidden;
 }
 
 /* キラーン */
@@ -102,69 +134,73 @@ iframe {
   left:-60%;
   width: 40%;
   height: 180%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,.55),
-    transparent
-  );
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.55), transparent);
   transform: rotate(18deg);
   opacity: 0;
-  animation: shimmer calc(2400ms * var(--t)) ease forwards;
-  animation-delay: calc(500ms * var(--t));
+  animation: shimmer var(--t-shimmer) ease forwards;
+  animation-delay: calc(var(--d-edition) + 180ms);
 }
 
 /* ===== PLAY COUNT ===== */
-.count {
-  margin-top: 64px;      /* ★ ブロック全体を下に */
-  text-align: center;
-  opacity: 0;
+.count{
+  text-align:center;
+  opacity:0;
   transform: translateY(14px);
-  animation: countPop calc(1300ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: calc(3000ms * var(--t));
+  animation: countPop var(--t-count) cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: var(--d-count);
 }
 
-.count .label {
+.count .label{
   font-size: 13px;
   letter-spacing: 0.25em;
   color: var(--muted2);
   margin-bottom: 10px;
 }
 
-.count .num {
+.count .num{
   font-size: 56px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .count .remaining.bottom-note{
-  margin-top: 22px;
+  margin-top: 20px;
   font-size: 11px;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,.65);
+  line-height: 1.6;
+}
+.count .remaining.bottom-note strong{
+  color:#fff;
+  font-weight:600;
 }
 
-/* ===== アニメーション ===== */
-@keyframes logoPop {
+/* ===== アニメ ===== */
+@keyframes logoPop{
   0%   { opacity:0; transform: translateY(12px) scale(.88); }
   60%  { opacity:1; transform: translateY(0) scale(1.03); }
   100% { opacity:1; transform: translateY(0) scale(1); }
 }
-@keyframes editionIn { to { opacity:1; transform: translateY(0); } }
-@keyframes shimmer {
+@keyframes editionIn{ to { opacity:1; transform: translateY(0); } }
+@keyframes shimmer{
   0%   { opacity:0; left:-60%; }
   20%  { opacity:.9; }
   100% { opacity:0; left:140%; }
 }
-@keyframes countPop {
+@keyframes countPop{
   0%   { opacity:0; transform: translateY(16px) scale(.98); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
   100% { opacity:1; transform: translateY(0) scale(1); }
 }
-@keyframes videoIn {
+@keyframes videoIn{
   0%   { opacity:0; transform: translateY(20px) scale(.985); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
   100% { opacity:1; transform: translateY(0) scale(1); }
+}
+
+/* motion配慮 */
+@media (prefers-reduced-motion: reduce){
+  * { animation:none !important; opacity:1 !important; transform:none !important; }
 }
 </style>
 </head>
@@ -177,21 +213,25 @@ iframe {
 
 <div class="main">
 
-  <div class="video-wrap" id="videoWrap">
-    <iframe
-      src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
-      allow="autoplay">
-    </iframe>
+  <div class="top-stack">
+    <div class="video-wrap" id="videoWrap">
+      <iframe
+        src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
+        allow="autoplay">
+      </iframe>
+    </div>
+
+    <div class="edition" id="editionText">［ Edition 1 / 300 ］</div>
   </div>
 
-  <div class="edition" id="editionText">
-    ［ Edition 1 / 300 ］
-  </div>
+  <div class="spacer"></div>
 
-  <div class="count">
-    <div class="label">PLAY COUNT THIS MONTH</div>
-    <div class="num" id="playCountNum">00</div>
-    <div class="remaining bottom-note" id="remainingText"></div>
+  <div class="bottom-stack">
+    <div class="count">
+      <div class="label">PLAY COUNT THIS MONTH</div>
+      <div class="num" id="playCountNum">00</div>
+      <div class="remaining bottom-note" id="remainingText"></div>
+    </div>
   </div>
 
 </div>
@@ -204,37 +244,43 @@ const CONFIG = {
   playedThisMonth: 1
 };
 
-const T = 2.2;
-const pad2 = n => String(n).padStart(2,"0");
+const pad2 = n => String(n).padStart(2, "0");
 
 /* Edition */
 document.getElementById("editionText").textContent =
   `［ Edition ${CONFIG.editionCurrent} / ${CONFIG.editionTotal} ］`;
 
-/* Remaining */
+/* Remaining（THIS MONTHなし） */
 const remaining = Math.max(0, CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth);
 document.getElementById("remainingText").innerHTML =
   `［ YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES ］`;
 
-/* 00 → 01 */
+/* 00 → 01（2桁固定） */
 const numEl = document.getElementById("playCountNum");
 let cur = 0;
+const target = CONFIG.playedThisMonth;
 
+/* CSS変数のmsをJSでも使う（ズレ防止） */
+const css = getComputedStyle(document.documentElement);
+const dNumber = parseInt(css.getPropertyValue("--d-number")) || 1950;
+const dUnlock = parseInt(css.getPropertyValue("--d-unlock")) || 2550;
+
+/* カウント開始 */
 setTimeout(() => {
   const timer = setInterval(() => {
-    cur++;
-    if (cur >= CONFIG.playedThisMonth) {
-      cur = CONFIG.playedThisMonth;
+    cur += 1;
+    if (cur >= target) {
+      cur = target;
       clearInterval(timer);
     }
     numEl.textContent = pad2(cur);
-  }, 240 * T);
-}, 3600 * T);
+  }, 140); // ★ 刻みも少しキビキビ
+}, dNumber);
 
 /* 動画解禁 */
 setTimeout(() => {
   document.getElementById("videoWrap").classList.add("active");
-}, 5200 * T);
+}, dUnlock);
 </script>
 
 </body>
