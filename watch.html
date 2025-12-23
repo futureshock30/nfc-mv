@@ -10,7 +10,6 @@
   --bg:#000;
   --fg:#fff;
   --muted: rgba(255,255,255,.6);
-  --muted2: rgba(255,255,255,.55);
 }
 
 html, body {
@@ -23,235 +22,123 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== ロゴ（上固定・前の位置） ===== */
+/* ===== 上部ブロック ===== */
 .header {
   position: fixed;
   top: 6px;
   left: 0;
   right: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   z-index: 10;
   pointer-events: none;
 }
 
+/* Edition */
+.edition {
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  opacity: 0;
+  margin-bottom: 8px;
+  animation: fadeIn 1200ms ease forwards;
+}
+
+/* FSロゴ */
 #logo {
   width: 380px;
   max-width: 92vw;
   opacity: 0;
   transform: translateY(10px) scale(.92);
-  animation: logoIn 1600ms cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: 2600ms; /* ← 順番維持 */
+  animation: logoIn 2000ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: 600ms;
 }
 
-/* ===== メイン（中央レイアウト：前の状態） ===== */
+/* ===== メイン ===== */
 .main {
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 160px; /* ロゴ回避 */
+  padding-top: 200px;
   box-sizing: border-box;
 }
 
-/* ===== 動画（中央） ===== */
-.video-wrap{
-  width: min(92vw, 900px);
-  aspect-ratio: 16 / 9;
-  margin-bottom: 24px;
-  opacity: 0;
-  transform: translateY(14px);
-  animation: fadeUp 1200ms ease forwards;
-  animation-delay: 5200ms; /* 最後 */
-}
-
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  background:#000;
-}
-
-/* ===== Edition（動画の下） ===== */
-.edition {
-  font-size: 15px;
-  letter-spacing: 0.22em;
-  margin-bottom: 24px;
-  opacity: 0;
-  transform: translateY(8px);
-  animation: fadeUp 900ms ease forwards;
-  animation-delay: 1200ms; /* 最初 */
-  position: relative;
-  overflow: hidden;
-}
-
-/* キラーン */
-.edition::after{
-  content:"";
-  position:absolute;
-  top:-40%;
-  left:-60%;
-  width: 40%;
-  height: 180%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,.55),
-    transparent
-  );
-  transform: rotate(18deg);
-  opacity: 0;
-  animation: shimmer 2800ms ease forwards;
-  animation-delay: 2000ms;
-}
-
-/* spark */
-.spark{
-  position:absolute;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background: rgba(255,255,255,.95);
-  box-shadow: 0 0 12px rgba(255,255,255,.8);
-  opacity:0;
-}
-.spark.s1{
-  right:-10px;
-  top:30%;
-  animation: spark 1500ms ease forwards;
-  animation-delay: 2200ms;
-}
-.spark.s2{
-  right:10px;
-  top:-20%;
-  animation: spark 1500ms ease forwards;
-  animation-delay: 2500ms;
-}
-
 /* ===== Play Count ===== */
-.count{
-  text-align:center;
-  opacity:0;
-  transform: translateY(10px);
-  animation: fadeUp 900ms ease forwards;
-  animation-delay: 3200ms;
+.count {
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 1200ms ease forwards;
+  animation-delay: 2600ms;
 }
 
-.count .label{
-  font-size:13px;
-  letter-spacing:.25em;
+.count .label {
+  font-size: 13px;
+  letter-spacing: 0.25em;
   color: var(--muted);
-  margin-bottom:14px;
+  margin-bottom: 14px;
 }
 
-.num-line{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
-  margin-bottom:14px;
+/* 00 → 01 表示 */
+.count .num-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 14px;
 }
 
-.num{
-  font-size:56px;
-  letter-spacing:.08em;
+.count .num {
+  font-size: 56px;
 }
 
-.arrow{
-  font-size:20px;
-  opacity:.6;
-}
-
-/* 右側スロット */
-.slot{
-  position: relative;
-  width: 2.2ch;
-  height: 1.05em;
-  overflow: hidden;
-}
-
-.slot-inner{
-  position:absolute;
-  top:0;
-  left:0;
-}
-
-.slot-inner .num{
-  display:block;
-  line-height:1.05em;
+.count .arrow {
+  font-size: 20px;
+  opacity: .6;
 }
 
 /* YOU CAN PLAY */
-.remaining{
-  font-size:12px;
-  letter-spacing:.18em;
-  color: var(--muted2);
+.count .remaining {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,.55);
 }
 
 /* ===== Animations ===== */
-@keyframes fadeUp{
-  to{ opacity:1; transform: translateY(0); }
+@keyframes fadeIn {
+  to { opacity:1; }
 }
-@keyframes logoIn{
-  to{ opacity:1; transform: translateY(0) scale(1); }
-}
-@keyframes shimmer{
-  0%{ opacity:0; left:-60%; }
-  25%{ opacity:.9; }
-  100%{ opacity:0; left:140%; }
-}
-@keyframes spark{
-  0%{ opacity:0; transform: scale(.4); }
-  50%{ opacity:1; transform: scale(1.1); }
-  100%{ opacity:0; transform: scale(.6); }
-}
-@keyframes flipDown{
-  from{ transform: translateY(0); }
-  to{ transform: translateY(-1.05em); }
+
+@keyframes logoIn {
+  to { opacity:1; transform: translateY(0) scale(1); }
 }
 </style>
 </head>
 
 <body>
 
+<!-- 上部：Edition → Logo -->
 <div class="header">
+  <div class="edition" id="editionText">Edition 1/300</div>
   <img id="logo" src="./logo.png" alt="Future Shock Logo">
 </div>
 
 <div class="main">
-
-  <!-- Edition -->
-  <div class="edition" id="editionText">
-    Edition 1/300
-    <span class="spark s1"></span>
-    <span class="spark s2"></span>
-  </div>
 
   <!-- Play Count -->
   <div class="count">
     <div class="label">PLAY COUNT THIS MONTH</div>
 
     <div class="num-line">
-      <div class="num">00</div>
+      <div class="num" id="numLeft">00</div>
       <div class="arrow">→</div>
-      <div class="slot">
-        <div class="slot-inner" id="slotInner">
-          <span class="num">00</span>
-          <span class="num" id="numTo">01</span>
-        </div>
-      </div>
+      <div class="num" id="numRight">01</div>
     </div>
 
-    <div class="remaining" id="remainingText">YOU CAN PLAY 9 TIMES</div>
-  </div>
-
-  <!-- VIDEO -->
-  <div class="video-wrap">
-    <iframe
-      src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
-      allow="autoplay">
-    </iframe>
+    <div class="remaining" id="remainingText">
+      YOU CAN PLAY 9 TIMES
+    </div>
   </div>
 
 </div>
@@ -264,20 +151,18 @@ const CONFIG = {
   playedThisMonth: 1
 };
 
-document.getElementById("editionText").childNodes[0].nodeValue =
+document.getElementById("editionText").textContent =
   `Edition ${CONFIG.editionCurrent}/${CONFIG.editionTotal}`;
 
 document.getElementById("remainingText").textContent =
   `YOU CAN PLAY ${CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth} TIMES`;
 
-/* 00 → 01 */
+/* 00 → 01 を“溜めてから” */
 setTimeout(() => {
-  document.getElementById("numTo").textContent =
-    String(CONFIG.playedThisMonth).padStart(2,"0");
-  document.getElementById("slotInner").style.animation =
-    "flipDown 900ms cubic-bezier(.2,.9,.2,1) forwards";
-}, 3800);
+  document.getElementById("numRight").textContent = "01";
+}, 3200);
 </script>
 
 </body>
 </html>
+
