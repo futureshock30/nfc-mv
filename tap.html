@@ -1,1 +1,16 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tap</title>
+</head>
+<body style="background:black;color:white;display:flex;align-items:center;justify-content:center;height:100vh;">
+<script>
+  // 一時キー（超簡易）
+  const key = "nfc-" + Date.now();
+  // watch.html に飛ばす
+  location.href = "watch.html?key=" + key;
+</script>
+TAP OK
+</body>
+</html>
