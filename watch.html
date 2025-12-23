@@ -23,10 +23,10 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== ロゴ＋エディション ===== */
+/* ===== エディション＋ロゴ（固定） ===== */
 .logo-area {
   position: fixed;
-  top: 4px;              /* ← さらに少し上 */
+  top: 4px;
   left: 0;
   right: 0;
   display: flex;
@@ -36,27 +36,18 @@ html, body {
   pointer-events: none;
 }
 
-#logo {
-  width: 340px;
-  max-width: 88vw;
-  opacity: 0;
-  transform: translateY(10px) scale(.9);
-  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
-  animation: logoPop 2600ms cubic-bezier(.2,.9,.2,1) forwards;
-}
-
-/* ===== Edition ===== */
+/* ===== Edition（主役） ===== */
 .edition {
-  margin-top: 6px;        /* ← ロゴとの間を詰める */
-  font-size: 17px;        /* ← 少し大きく */
-  letter-spacing: 0.16em;
+  font-size: 20px;          /* ← さらに大きく */
+  letter-spacing: 0.18em;
   opacity: 0;
   position: relative;
-  color: rgba(255,255,255,.9);
+  color: rgba(255,255,255,.95);
   transform: translateY(6px);
   animation: editionIn 1600ms ease forwards;
-  animation-delay: 2400ms;
+  animation-delay: 1800ms; /* ← ロゴより先に出す */
   overflow: hidden;
+  margin-bottom: 6px;      /* ← ロゴとの距離 */
 }
 
 .edition::after{
@@ -74,8 +65,8 @@ html, body {
   );
   transform: rotate(18deg);
   opacity: 0;
-  animation: shimmer 3600ms ease forwards; /* ← ゆっくり */
-  animation-delay: 3000ms;
+  animation: shimmer 3600ms ease forwards;
+  animation-delay: 2600ms;
 }
 
 /* spark */
@@ -92,13 +83,24 @@ html, body {
   right:-10px;
   top:30%;
   animation: spark 1800ms ease forwards;
-  animation-delay: 3300ms;
+  animation-delay: 2900ms;
 }
 .spark.s2{
   right:10px;
   top:-20%;
   animation: spark 1800ms ease forwards;
-  animation-delay: 3600ms;
+  animation-delay: 3200ms;
+}
+
+/* ===== FSロゴ（署名） ===== */
+#logo {
+  width: 300px;            /* ← 少し控えめに */
+  max-width: 82vw;
+  opacity: 0;
+  transform: translateY(10px) scale(.92);
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
+  animation: logoPop 2200ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: 2600ms;
 }
 
 /* ===== メイン ===== */
@@ -108,7 +110,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 140px;
+  padding-top: 160px;   /* ← エディション＋ロゴ分 */
   box-sizing: border-box;
 }
 
@@ -124,9 +126,7 @@ html, body {
   animation-delay: 6500ms;
   pointer-events: none;
 }
-.video-wrap.active {
-  pointer-events: auto;
-}
+.video-wrap.active { pointer-events: auto; }
 
 iframe {
   width: 100%;
@@ -157,22 +157,21 @@ iframe {
   margin-bottom: 18px;
 }
 
-/* 補足情報（小さめ） */
 .count .remaining {
-  font-size: 12px;            /* ← 小さく */
+  font-size: 12px;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,.7);
 }
 
 /* ===== アニメーション ===== */
+@keyframes editionIn {
+  to { opacity:1; transform: translateY(0); }
+}
+
 @keyframes logoPop {
   0%   { opacity:0; transform: translateY(12px) scale(.88); }
   60%  { opacity:1; transform: translateY(0) scale(1.03); }
   100% { opacity:1; transform: translateY(0) scale(1); }
-}
-
-@keyframes editionIn {
-  to { opacity:1; transform: translateY(0); }
 }
 
 @keyframes shimmer {
@@ -203,13 +202,14 @@ iframe {
 
 <body>
 
+<!-- 上部：Edition → FSロゴ -->
 <div class="logo-area">
-  <img id="logo" src="./logo.png" alt="Future Shock Logo">
   <div class="edition" id="editionText">
     Edition 1/300
     <span class="spark s1"></span>
     <span class="spark s2"></span>
   </div>
+  <img id="logo" src="./logo.png" alt="Future Shock Logo">
 </div>
 
 <div class="main">
@@ -230,7 +230,6 @@ iframe {
 </div>
 
 <script>
-/* ===== 設定（仮） ===== */
 const CONFIG = {
   editionCurrent: 1,
   editionTotal: 300,
@@ -238,31 +237,19 @@ const CONFIG = {
   playedThisMonth: 1
 };
 
-/* Edition */
 document.getElementById("editionText").childNodes[0].nodeValue =
   `Edition ${CONFIG.editionCurrent}/${CONFIG.editionTotal}`;
 
-/* Remaining */
 const remaining =
   CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth;
 
 document.getElementById("remainingText").textContent =
   `YOU CAN PLAY ${remaining} TIMES THIS MONTH`;
 
-/* ===== カウント演出 ===== */
 const numEl = document.getElementById("playCountNum");
+setTimeout(() => { numEl.textContent = "00"; }, 4200);
+setTimeout(() => { numEl.textContent = "01"; }, 5200);
 
-/* まず 00 を見せる */
-setTimeout(() => {
-  numEl.textContent = "00";
-}, 4200);
-
-/* しっかり溜めてから 01 に */
-setTimeout(() => {
-  numEl.textContent = "01";
-}, 5200);
-
-/* 動画解禁 */
 setTimeout(() => {
   document.getElementById("videoWrap").classList.add("active");
 }, 6500);
