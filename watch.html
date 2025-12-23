@@ -11,20 +11,23 @@
   --fg:#fff;
   --muted2: rgba(255,255,255,.5);
 
-  /* ===== 各パーツの“間”だけ詰める（ms） ===== */
-  --d-edition: 600ms;   /* Edition開始 */
-  --d-logo: 1050ms;     /* ロゴ開始 */
-  --d-count: 1650ms;    /* PLAYブロック開始 */
-  --d-number: 1950ms;   /* 00→01開始 */
-  --d-video: 2550ms;    /* 動画フレーム開始 */
-  --d-unlock: 2550ms;   /* 動画クリック解禁 */
+  /* ★ 動画を下げる量（ここだけ触ればOK） */
+  --video-offset: 22px;
 
-  /* 各アニメの長さ */
-  --t-edition: 700ms;
-  --t-logo: 900ms;
-  --t-count: 800ms;
-  --t-video: 900ms;
-  --t-shimmer: 1200ms;
+  /* ===== 各パーツの“間”を少し遅く（ms） ===== */
+  --d-edition: 750ms;
+  --d-logo: 1250ms;
+  --d-count: 2050ms;
+  --d-number: 2400ms;
+  --d-video: 3150ms;
+  --d-unlock: 3150ms;
+
+  /* ===== 各アニメの長さ：気持ち遅く ===== */
+  --t-edition: 850ms;
+  --t-logo: 1050ms;
+  --t-count: 950ms;
+  --t-video: 1050ms;
+  --t-shimmer: 1400ms;
 }
 
 html, body{
@@ -47,7 +50,7 @@ html, body{
 }
 
 #logo{
-  width: 380px;          /* 少し大きく */
+  width: 380px;
   max-width: 90vw;
   opacity: 0;
   transform: translateY(10px) scale(.9);
@@ -56,19 +59,16 @@ html, body{
   animation-delay: var(--d-logo);
 }
 
-/* ===== メイン（動画位置がブレない構造） ===== */
+/* ===== メイン（安定レイアウト） ===== */
 .main{
   min-height: 100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
-
-  /* ★ “上からの開始位置”をここで固定 */
-  padding-top: 130px;
+  padding-top: 90px;
   box-sizing:border-box;
 }
 
-/* 上段：動画＋Edition */
 .top-stack{
   width: 100%;
   display:flex;
@@ -76,17 +76,15 @@ html, body{
   align-items:center;
 }
 
-/* ★ ここがポイント：下に押すのはmarginではなくスペーサー */
 .spacer{
-  flex: 1;              /* 余った高さを全部ここが吸う */
+  flex: 1;
 }
 
-/* 下段：PLAYブロック */
 .bottom-stack{
   width:100%;
   display:flex;
   justify-content:center;
-  padding-bottom: 44px; /* 下の余白 */
+  padding-bottom: 44px;
   box-sizing:border-box;
 }
 
@@ -94,7 +92,10 @@ html, body{
 .video-wrap{
   width: min(92vw, 900px);
   aspect-ratio: 16 / 9;
-  margin-top: 0;
+
+  /* ★ 固定ロゴに被らないように動画を下げる */
+  margin-top: var(--video-offset);
+
   opacity: 0;
   transform: translateY(18px) scale(.985);
   filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
@@ -138,7 +139,7 @@ iframe{
   transform: rotate(18deg);
   opacity: 0;
   animation: shimmer var(--t-shimmer) ease forwards;
-  animation-delay: calc(var(--d-edition) + 180ms);
+  animation-delay: calc(var(--d-edition) + 220ms);
 }
 
 /* ===== PLAY COUNT ===== */
@@ -255,17 +256,16 @@ const remaining = Math.max(0, CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth);
 document.getElementById("remainingText").innerHTML =
   `［ YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES ］`;
 
+/* CSS変数のmsをJSでも使う（ズレ防止） */
+const css = getComputedStyle(document.documentElement);
+const dNumber = parseInt(css.getPropertyValue("--d-number")) || 2400;
+const dUnlock = parseInt(css.getPropertyValue("--d-unlock")) || 3150;
+
 /* 00 → 01（2桁固定） */
 const numEl = document.getElementById("playCountNum");
 let cur = 0;
 const target = CONFIG.playedThisMonth;
 
-/* CSS変数のmsをJSでも使う（ズレ防止） */
-const css = getComputedStyle(document.documentElement);
-const dNumber = parseInt(css.getPropertyValue("--d-number")) || 1950;
-const dUnlock = parseInt(css.getPropertyValue("--d-unlock")) || 2550;
-
-/* カウント開始 */
 setTimeout(() => {
   const timer = setInterval(() => {
     cur += 1;
@@ -274,7 +274,7 @@ setTimeout(() => {
       clearInterval(timer);
     }
     numEl.textContent = pad2(cur);
-  }, 140); // ★ 刻みも少しキビキビ
+  }, 160); // ★ 前より少しだけゆったり
 }, dNumber);
 
 /* 動画解禁 */
