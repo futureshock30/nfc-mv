@@ -6,20 +6,28 @@
 <title>NFC Watch</title>
 
 <style>
- /* ===== “間”をリッチに（delayを増やす） ===== */
-  --d-edition: 1500ms;   /* 先にEditionが気配 */
-  --d-logo: 2400ms;      /* ロゴが主役として出る */
-  --d-count: 4100ms;     /* 状態表示は一拍置く */
-  --d-number: 4700ms;    /* 数字はさらに一拍 */
-  --d-video: 5900ms;     /* 体験（動画）は最後に“解禁” */
-  --d-unlock: 5900ms;
+:root{
+  --bg:#000;
+  --fg:#fff;
+  --muted2: rgba(255,255,255,.5);
 
-  /* ===== 動きの長さ（ほぼ据え置き：ちょいだけ伸ばす） ===== */
-  --t-edition: 1400ms;
-  --t-logo: 1650ms;
-  --t-count: 1550ms;
-  --t-video: 1650ms;
-  --t-shimmer: 2300ms;
+  /* ★ 動画を下げる量（ここだけ触ればOK） */
+  --video-offset: 125px;
+
+   /* ===== 各パーツの“間”（約1.3倍） ===== */
+  --d-edition: 1250ms;
+  --d-logo: 2000ms;
+  --d-count: 3200ms;
+  --d-number: 3700ms;
+  --d-video: 4600ms;
+  --d-unlock: 4600ms;
+
+  /* ===== 各アニメの長さ（約1.3倍） ===== */
+  --t-edition: 1350ms;
+  --t-logo: 1600ms;
+  --t-count: 1500ms;
+  --t-video: 1600ms;
+  --t-shimmer: 2150ms;
 }
 
 html, body{
