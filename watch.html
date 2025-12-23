@@ -10,7 +10,9 @@
   --bg:#000;
   --fg:#fff;
   --muted2: rgba(255,255,255,.5);
-  --t: 3;
+
+  /* ★ 全体ペースを少し早める */
+  --t: 2.2;
 }
 
 html, body {
@@ -42,7 +44,7 @@ html, body {
   transform: translateY(10px) scale(.9);
   filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
   animation: logoPop calc(2700ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: calc(1500ms * var(--t));
+  animation-delay: calc(1200ms * var(--t));
 }
 
 /* ===== メイン ===== */
@@ -65,22 +67,29 @@ html, body {
   transform: translateY(18px) scale(.985);
   filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
   animation: videoIn calc(2200ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: calc(6000ms * var(--t));
+  animation-delay: calc(5200ms * var(--t));
   pointer-events: none;
 }
 .video-wrap.active { pointer-events: auto; }
 
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
+
 /* ===== Edition ===== */
 .edition {
   margin-top: 18px;
-  margin-bottom: 42px;   /* ★ PLAYとの距離を広げる */
+  margin-bottom: 56px;   /* ★ PLAYとの距離をさらに確保 */
   font-size: 17px;
   letter-spacing: 0.18em;
   opacity: 0;
   position: relative;
   color: rgba(255,255,255,.9);
   transform: translateY(8px);
-  animation: editionIn calc(1500ms * var(--t)) ease forwards;
+  animation: editionIn calc(1300ms * var(--t)) ease forwards;
   text-align: center;
   overflow: hidden;
 }
@@ -101,18 +110,18 @@ html, body {
   );
   transform: rotate(18deg);
   opacity: 0;
-  animation: shimmer calc(2800ms * var(--t)) ease forwards;
-  animation-delay: calc(600ms * var(--t));
+  animation: shimmer calc(2400ms * var(--t)) ease forwards;
+  animation-delay: calc(500ms * var(--t));
 }
 
 /* ===== PLAY COUNT ===== */
 .count {
-  margin-top: 24px;       /* ★ 全体を下げる */
+  margin-top: 64px;      /* ★ ブロック全体を下に */
   text-align: center;
   opacity: 0;
   transform: translateY(14px);
-  animation: countPop calc(1500ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: calc(3600ms * var(--t));
+  animation: countPop calc(1300ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: calc(3000ms * var(--t));
 }
 
 .count .label {
@@ -195,7 +204,7 @@ const CONFIG = {
   playedThisMonth: 1
 };
 
-const T = 3;
+const T = 2.2;
 const pad2 = n => String(n).padStart(2,"0");
 
 /* Edition */
@@ -220,12 +229,12 @@ setTimeout(() => {
     }
     numEl.textContent = pad2(cur);
   }, 240 * T);
-}, 4500 * T);
+}, 3600 * T);
 
 /* 動画解禁 */
 setTimeout(() => {
   document.getElementById("videoWrap").classList.add("active");
-}, 6000 * T);
+}, 5200 * T);
 </script>
 
 </body>
