@@ -23,26 +23,6 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== 上：ロゴだけ固定 ===== */
-.header {
-  position: fixed;
-  top: 6px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 10;
-  pointer-events: none;
-}
-
-#logo {
-  width: 380px;
-  max-width: 92vw;
-  opacity: 0;
-  transform: translateY(10px) scale(.92);
-  animation: logoIn 2000ms cubic-bezier(.2,.9,.2,1) forwards;
-}
-
 /* ===== メイン ===== */
 .main {
   min-height: 100vh;
@@ -50,43 +30,23 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 200px; /* ロゴ分 */
+  padding-top: 120px;
   box-sizing: border-box;
 }
 
-/* ===== 動画 ===== */
-.video-wrap{
-  width: min(92vw, 900px);
-  aspect-ratio: 16 / 9;
-  margin-bottom: 18px;
-  opacity: 0;
-  transform: translateY(14px);
-  animation: fadeUp 1200ms ease forwards;
-  animation-delay: 1400ms;
-}
-
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  background:#000;
-}
-
-/* ===== Edition（動画の下） + キラーン ===== */
+/* ===== Edition ===== */
 .edition {
-  margin: 0 0 34px;
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.22em;
-  color: rgba(255,255,255,.92);
+  margin-bottom: 28px;
   opacity: 0;
   transform: translateY(8px);
-  animation: fadeUp 1000ms ease forwards;
-  animation-delay: 2400ms;
+  animation: fadeUp 900ms ease forwards;
   position: relative;
   overflow: hidden;
 }
 
-/* キラーンの帯 */
+/* キラーン */
 .edition::after{
   content:"";
   position:absolute;
@@ -102,11 +62,11 @@ iframe{
   );
   transform: rotate(18deg);
   opacity: 0;
-  animation: shimmer 3200ms ease forwards; /* キラーンゆっくり */
-  animation-delay: 3000ms;
+  animation: shimmer 2800ms ease forwards;
+  animation-delay: 900ms;
 }
 
-/* spark（小さい光点） */
+/* spark */
 .spark{
   position:absolute;
   width:6px;
@@ -115,78 +75,58 @@ iframe{
   background: rgba(255,255,255,.95);
   box-shadow: 0 0 12px rgba(255,255,255,.8);
   opacity:0;
-  pointer-events:none;
 }
 .spark.s1{
   right:-10px;
   top:30%;
-  animation: spark 1700ms ease forwards;
-  animation-delay: 3200ms;
+  animation: spark 1500ms ease forwards;
+  animation-delay: 1200ms;
 }
 .spark.s2{
   right:10px;
   top:-20%;
-  animation: spark 1700ms ease forwards;
-  animation-delay: 3500ms;
+  animation: spark 1500ms ease forwards;
+  animation-delay: 1500ms;
+}
+
+/* ===== FSロゴ ===== */
+#logo{
+  width: 380px;
+  max-width: 92vw;
+  margin-bottom: 36px;
+  opacity: 0;
+  transform: translateY(10px) scale(.92);
+  animation: logoIn 1600ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: 1800ms;
 }
 
 /* ===== Play Count ===== */
-.count {
-  text-align: center;
-  opacity: 0;
+.count{
+  text-align:center;
+  opacity:0;
   transform: translateY(10px);
-  animation: fadeUp 1000ms ease forwards;
+  animation: fadeUp 900ms ease forwards;
   animation-delay: 3000ms;
 }
 
-.count .label {
-  font-size: 13px;
-  letter-spacing: 0.25em;
+.count .label{
+  font-size:13px;
+  letter-spacing:.25em;
   color: var(--muted);
-  margin-bottom: 14px;
+  margin-bottom:14px;
 }
 
-/* 00 → 01 表示 */
 .num-line{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap: 14px;
-  margin-bottom: 14px;
+  gap:14px;
+  margin-bottom:14px;
 }
 
 .num{
   font-size:56px;
-  letter-spacing: .08em;
-}
-
-/* 右側数字スロット */
-.slot{
-  position: relative;
-  width: 2.2ch;
-  height: 1.05em;
-  overflow: hidden;
-}
-
-/* スロット内を上下移動 */
-.slot-inner{
-  position:absolute;
-  top:0;
-  left:0;
-  will-change: transform;
-  transform: translateY(0);
-}
-
-.slot-inner .num{
-  display:block;
-  line-height: 1.05em;
-}
-
-/* アニメ */
-@keyframes flipDown{
-  0%   { transform: translateY(0); filter: blur(0px); opacity: 1; }
-  40%  { filter: blur(1px); }
-  100% { transform: translateY(-1.05em); filter: blur(0px); opacity: 1; }
+  letter-spacing:.08em;
 }
 
 .arrow{
@@ -194,66 +134,96 @@ iframe{
   opacity:.6;
 }
 
+/* 右側スロット */
+.slot{
+  position: relative;
+  width: 2.2ch;
+  height: 1.05em;
+  overflow: hidden;
+}
+
+.slot-inner{
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.slot-inner .num{
+  display:block;
+  line-height:1.05em;
+}
+
 /* YOU CAN PLAY */
 .remaining{
-  font-size: 12px;
-  letter-spacing: 0.18em;
+  font-size:12px;
+  letter-spacing:.18em;
   color: var(--muted2);
 }
 
-/* ===== Animations ===== */
-@keyframes logoIn {
-  to { opacity:1; transform: translateY(0) scale(1); }
+/* ===== 動画 ===== */
+.video-wrap{
+  width: min(92vw, 900px);
+  aspect-ratio: 16 / 9;
+  margin-top: 40px;
+  opacity:0;
+  transform: translateY(14px);
+  animation: fadeUp 1200ms ease forwards;
+  animation-delay: 5200ms;
 }
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  background:#000;
+}
+
+/* ===== Animations ===== */
 @keyframes fadeUp{
-  to { opacity:1; transform: translateY(0); }
+  to{ opacity:1; transform: translateY(0); }
+}
+@keyframes logoIn{
+  to{ opacity:1; transform: translateY(0) scale(1); }
 }
 @keyframes shimmer{
-  0%   { opacity:0; left:-60%; }
-  25%  { opacity:.9; }
-  100% { opacity:0; left:140%; }
+  0%{ opacity:0; left:-60%; }
+  25%{ opacity:.9; }
+  100%{ opacity:0; left:140%; }
 }
 @keyframes spark{
-  0%   { opacity:0; transform: scale(.4); }
-  50%  { opacity:1; transform: scale(1.1); }
-  100% { opacity:0; transform: scale(.6); }
+  0%{ opacity:0; transform: scale(.4); }
+  50%{ opacity:1; transform: scale(1.1); }
+  100%{ opacity:0; transform: scale(.6); }
+}
+@keyframes flipDown{
+  from{ transform: translateY(0); }
+  to{ transform: translateY(-1.05em); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ロゴ -->
-<div class="header">
-  <img id="logo" src="./logo.png" alt="Future Shock Logo">
-</div>
-
 <div class="main">
 
-  <!-- VIDEO -->
-  <div class="video-wrap">
-    <iframe
-      src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
-      allow="autoplay">
-    </iframe>
-  </div>
-
-  <!-- Edition（動画の下） -->
+  <!-- Edition -->
   <div class="edition" id="editionText">
     Edition 1/300
     <span class="spark s1"></span>
     <span class="spark s2"></span>
   </div>
 
+  <!-- FS LOGO -->
+  <img id="logo" src="./logo.png" alt="Future Shock Logo">
+
   <!-- Play Count -->
   <div class="count">
     <div class="label">PLAY COUNT THIS MONTH</div>
 
     <div class="num-line">
-      <div class="num" id="numLeft">00</div>
+      <div class="num">00</div>
       <div class="arrow">→</div>
-
-      <div class="slot" aria-label="playcount">
+      <div class="slot">
         <div class="slot-inner" id="slotInner">
           <span class="num">00</span>
           <span class="num" id="numTo">01</span>
@@ -262,6 +232,14 @@ iframe{
     </div>
 
     <div class="remaining" id="remainingText">YOU CAN PLAY 9 TIMES</div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="video-wrap">
+    <iframe
+      src="https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview"
+      allow="autoplay">
+    </iframe>
   </div>
 
 </div>
@@ -280,11 +258,10 @@ document.getElementById("editionText").childNodes[0].nodeValue =
 document.getElementById("remainingText").textContent =
   `YOU CAN PLAY ${CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth} TIMES`;
 
-/* 右側を 00→01 へアニメ */
+/* 00 → 01 を後から */
 setTimeout(() => {
   document.getElementById("numTo").textContent =
-    String(CONFIG.playedThisMonth).padStart(2, "0");
-
+    String(CONFIG.playedThisMonth).padStart(2,"0");
   document.getElementById("slotInner").style.animation =
     "flipDown 900ms cubic-bezier(.2,.9,.2,1) forwards";
 }, 3800);
