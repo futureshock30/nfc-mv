@@ -7,72 +7,70 @@
 
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      color: #fff;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background: #000; color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      overflow: hidden;
     }
 
-    /* ロゴ固定バー（大きく） */
-    .logo-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 96px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.95);
-      backdrop-filter: blur(6px);
-      z-index: 10;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    #logo {
-      height: 56px; /* ← ロゴ大きく */
-      width: auto;
-      opacity: 0;
-      transform: scale(0.96);
-      animation: fadeIn 700ms ease forwards;
-    }
-
-    /* 全体 */
-    .wrap {
+    /* 画面全体 */
+    .screen {
+      width: 100%;
       height: 100vh;
-      padding-top: 96px; /* ロゴ分 */
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* カウント */
-    #countArea {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ロゴ：最初は中央で浮かび上がる */
+    #logo {
+      height: 96px; /* ←ここで大きさ調整（もっと大きくしたければ 96/110） */
+      width: auto;
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+      animation: logoRise 900ms ease forwards;
+      filter: drop-shadow(0 0 18px rgba(255,255,255,0.12));
+    }
+
+    /* ロゴ：後で上に移動する（クラス付与で発動） */
+    #logo.toTop {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.92);
+      opacity: 1;
+      animation: logoToTop 650ms ease forwards;
+    }
+
+    /* テキスト類 */
+    #stats {
+      margin-top: 20px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
     }
 
     #label {
-      font-size: 14px;
-      letter-spacing: 0.25em;
-      opacity: 0.7;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      opacity: 0.65;
+      margin-bottom: 10px;
     }
 
-    #countdown {
-      font-size: 64px;
+    #playCount {
+      font-size: 56px;
+      letter-spacing: 0.05em;
       animation: pop 450ms ease;
     }
 
-    /* 動画：完全センター */
+    /* 動画：真ん中 */
     #videoArea {
       display: none;
       width: min(960px, 92vw);
+      margin-top: 18px;
     }
 
     .video-frame {
@@ -82,33 +80,41 @@
       background: #000;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; transform: scale(1); }
+    /* アニメーション */
+    @keyframes logoRise {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes logoToTop {
+      from { opacity: 1; }
+      to { opacity: 1; }
     }
 
     @keyframes pop {
       0% { transform: scale(0.85); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- ロゴ -->
-  <div class="logo-bar">
-    <img id="logo" src="./logo.png" alt="Future Shock Logo">
-  </div>
+  <div class="screen">
 
-  <div class="wrap">
+    <!-- ロゴ（最初は中央） -->
+    <img id="logo" src="./logo.png" alt="Future Shock Logo" />
 
-    <!-- カウント -->
-    <div id="countArea">
-      <div id="label">REMAINING THIS MONTH</div>
-      <div id="countdown"></div>
+    <!-- 今月の再生回数 -->
+    <div id="stats">
+      <div id="label">PLAY COUNT THIS MONTH</div>
+      <div id="playCount"></div>
     </div>
 
-    <!-- MV -->
+    <!-- MV（最後に真ん中で出す） -->
     <div id="videoArea">
       <iframe
         class="video-frame"
@@ -120,23 +126,30 @@
   </div>
 
   <script>
-    const currentViewCount = 1;
-    const remaining = 10 - currentViewCount;
+    /*
+      ★ここは後でサーバーから差し込む
+      currentViewCount = 今月の再生回数（1〜10）
+    */
+    const currentViewCount = 1; // 仮
 
-    const countdownEl = document.getElementById("countdown");
-    const countArea = document.getElementById("countArea");
+    const logo = document.getElementById("logo");
+    const stats = document.getElementById("stats");
+    const playCount = document.getElementById("playCount");
     const videoArea = document.getElementById("videoArea");
 
-    countdownEl.textContent = remaining;
+    // 1) ロゴが浮かび上がる（CSSで自動）
 
-    countdownEl.style.animation = "none";
-    void countdownEl.offsetWidth;
-    countdownEl.style.animation = "pop 450ms ease";
-
+    // 2) 0.9秒後に「今月の再生回数」を表示
     setTimeout(() => {
-      countArea.style.display = "none";
+      playCount.textContent = currentViewCount;
+      stats.style.animation = "fadeUp 550ms ease forwards";
+    }, 900);
+
+    // 3) 2.2秒後：ロゴを上へ移動して、動画を真ん中に表示
+    setTimeout(() => {
+      logo.classList.add("toTop");
       videoArea.style.display = "block";
-    }, 2000);
+    }, 2200);
   </script>
 
 </body>
