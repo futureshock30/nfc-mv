@@ -23,25 +23,65 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== メイン ===== */
+/* ===== ロゴ（上固定・前の位置） ===== */
+.header {
+  position: fixed;
+  top: 6px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#logo {
+  width: 380px;
+  max-width: 92vw;
+  opacity: 0;
+  transform: translateY(10px) scale(.92);
+  animation: logoIn 1600ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: 2600ms; /* ← 順番維持 */
+}
+
+/* ===== メイン（中央レイアウト：前の状態） ===== */
 .main {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 120px;
+  padding-top: 160px; /* ロゴ回避 */
   box-sizing: border-box;
 }
 
-/* ===== Edition ===== */
+/* ===== 動画（中央） ===== */
+.video-wrap{
+  width: min(92vw, 900px);
+  aspect-ratio: 16 / 9;
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fadeUp 1200ms ease forwards;
+  animation-delay: 5200ms; /* 最後 */
+}
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  background:#000;
+}
+
+/* ===== Edition（動画の下） ===== */
 .edition {
-  font-size: 16px;
+  font-size: 15px;
   letter-spacing: 0.22em;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   opacity: 0;
   transform: translateY(8px);
   animation: fadeUp 900ms ease forwards;
+  animation-delay: 1200ms; /* 最初 */
   position: relative;
   overflow: hidden;
 }
@@ -63,7 +103,7 @@ html, body {
   transform: rotate(18deg);
   opacity: 0;
   animation: shimmer 2800ms ease forwards;
-  animation-delay: 900ms;
+  animation-delay: 2000ms;
 }
 
 /* spark */
@@ -80,24 +120,13 @@ html, body {
   right:-10px;
   top:30%;
   animation: spark 1500ms ease forwards;
-  animation-delay: 1200ms;
+  animation-delay: 2200ms;
 }
 .spark.s2{
   right:10px;
   top:-20%;
   animation: spark 1500ms ease forwards;
-  animation-delay: 1500ms;
-}
-
-/* ===== FSロゴ ===== */
-#logo{
-  width: 380px;
-  max-width: 92vw;
-  margin-bottom: 36px;
-  opacity: 0;
-  transform: translateY(10px) scale(.92);
-  animation: logoIn 1600ms cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: 1800ms;
+  animation-delay: 2500ms;
 }
 
 /* ===== Play Count ===== */
@@ -106,7 +135,7 @@ html, body {
   opacity:0;
   transform: translateY(10px);
   animation: fadeUp 900ms ease forwards;
-  animation-delay: 3000ms;
+  animation-delay: 3200ms;
 }
 
 .count .label{
@@ -160,24 +189,6 @@ html, body {
   color: var(--muted2);
 }
 
-/* ===== 動画 ===== */
-.video-wrap{
-  width: min(92vw, 900px);
-  aspect-ratio: 16 / 9;
-  margin-top: 40px;
-  opacity:0;
-  transform: translateY(14px);
-  animation: fadeUp 1200ms ease forwards;
-  animation-delay: 5200ms;
-}
-
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  background:#000;
-}
-
 /* ===== Animations ===== */
 @keyframes fadeUp{
   to{ opacity:1; transform: translateY(0); }
@@ -204,6 +215,10 @@ iframe{
 
 <body>
 
+<div class="header">
+  <img id="logo" src="./logo.png" alt="Future Shock Logo">
+</div>
+
 <div class="main">
 
   <!-- Edition -->
@@ -212,9 +227,6 @@ iframe{
     <span class="spark s1"></span>
     <span class="spark s2"></span>
   </div>
-
-  <!-- FS LOGO -->
-  <img id="logo" src="./logo.png" alt="Future Shock Logo">
 
   <!-- Play Count -->
   <div class="count">
@@ -258,7 +270,7 @@ document.getElementById("editionText").childNodes[0].nodeValue =
 document.getElementById("remainingText").textContent =
   `YOU CAN PLAY ${CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth} TIMES`;
 
-/* 00 → 01 を後から */
+/* 00 → 01 */
 setTimeout(() => {
   document.getElementById("numTo").textContent =
     String(CONFIG.playedThisMonth).padStart(2,"0");
