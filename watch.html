@@ -23,10 +23,10 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== ロゴ＋エディション（固定） ===== */
+/* ===== ロゴ＋エディション ===== */
 .logo-area {
   position: fixed;
-  top: 6px;
+  top: 4px;              /* ← さらに少し上 */
   left: 0;
   right: 0;
   display: flex;
@@ -42,19 +42,19 @@ html, body {
   opacity: 0;
   transform: translateY(10px) scale(.9);
   filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
-  animation: logoPop 2700ms cubic-bezier(.2,.9,.2,1) forwards;
+  animation: logoPop 2600ms cubic-bezier(.2,.9,.2,1) forwards;
 }
 
 /* ===== Edition ===== */
 .edition {
-  margin-top: 10px;
-  font-size: 15px;
-  letter-spacing: 0.14em;
+  margin-top: 6px;        /* ← ロゴとの間を詰める */
+  font-size: 17px;        /* ← 少し大きく */
+  letter-spacing: 0.16em;
   opacity: 0;
   position: relative;
-  color: rgba(255,255,255,.85);
-  transform: translateY(8px);
-  animation: editionIn 1500ms ease forwards;
+  color: rgba(255,255,255,.9);
+  transform: translateY(6px);
+  animation: editionIn 1600ms ease forwards;
   animation-delay: 2400ms;
   overflow: hidden;
 }
@@ -69,12 +69,12 @@ html, body {
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255,255,255,.55),
+    rgba(255,255,255,.5),
     transparent
   );
   transform: rotate(18deg);
   opacity: 0;
-  animation: shimmer 2800ms ease forwards;
+  animation: shimmer 3600ms ease forwards; /* ← ゆっくり */
   animation-delay: 3000ms;
 }
 
@@ -91,14 +91,14 @@ html, body {
 .spark.s1{
   right:-10px;
   top:30%;
-  animation: spark 1500ms ease forwards;
-  animation-delay: 3200ms;
+  animation: spark 1800ms ease forwards;
+  animation-delay: 3300ms;
 }
 .spark.s2{
   right:10px;
   top:-20%;
-  animation: spark 1500ms ease forwards;
-  animation-delay: 3500ms;
+  animation: spark 1800ms ease forwards;
+  animation-delay: 3600ms;
 }
 
 /* ===== メイン ===== */
@@ -121,7 +121,7 @@ html, body {
   transform: translateY(18px) scale(.985);
   filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
   animation: videoIn 2200ms cubic-bezier(.2,.9,.2,1) forwards;
-  animation-delay: 6000ms;
+  animation-delay: 6500ms;
   pointer-events: none;
 }
 .video-wrap.active {
@@ -144,30 +144,24 @@ iframe {
   animation-delay: 4200ms;
 }
 
-/* ★ 見やすくした部分 */
-.count .remaining {
-  font-size: 14px;
-  letter-spacing: 0.18em;
-  color: rgba(255,255,255,.9);
-  margin-bottom: 22px;
-  line-height: 1.6;
-}
-
-.count .remaining strong {
-  color: #fff;
-  font-weight: 600;
-}
-
 .count .label {
   font-size: 13px;
   letter-spacing: 0.25em;
   color: var(--muted2);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .count .num {
   font-size: 56px;
-  line-height: 1;
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+
+/* 補足情報（小さめ） */
+.count .remaining {
+  font-size: 12px;            /* ← 小さく */
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,.7);
 }
 
 /* ===== アニメーション ===== */
@@ -183,7 +177,7 @@ iframe {
 
 @keyframes shimmer {
   0%   { opacity:0; left:-60%; }
-  20%  { opacity:.9; }
+  25%  { opacity:.9; }
   100% { opacity:0; left:140%; }
 }
 
@@ -203,11 +197,6 @@ iframe {
   0%   { opacity:0; transform: translateY(20px) scale(.985); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
   100% { opacity:1; transform: translateY(0) scale(1); }
-}
-
-/* motion配慮 */
-@media (prefers-reduced-motion: reduce){
-  * { animation: none !important; opacity:1 !important; transform:none !important; }
 }
 </style>
 </head>
@@ -233,9 +222,9 @@ iframe {
   </div>
 
   <div class="count">
-    <div class="remaining" id="remainingText"></div>
     <div class="label">PLAY COUNT THIS MONTH</div>
-    <div class="num" id="playCountNum">0</div>
+    <div class="num" id="playCountNum">00</div>
+    <div class="remaining" id="remainingText"></div>
   </div>
 
 </div>
@@ -254,34 +243,29 @@ document.getElementById("editionText").childNodes[0].nodeValue =
   `Edition ${CONFIG.editionCurrent}/${CONFIG.editionTotal}`;
 
 /* Remaining */
-const remaining = Math.max(
-  0,
-  CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth
-);
+const remaining =
+  CONFIG.maxPlaysPerMonth - CONFIG.playedThisMonth;
 
-document.getElementById("remainingText").innerHTML =
-  `YOU CAN PLAY <strong>${remaining}</strong> MORE TIMES THIS MONTH`;
+document.getElementById("remainingText").textContent =
+  `YOU CAN PLAY ${remaining} TIMES THIS MONTH`;
 
-/* ===== ゆっくりカウント ===== */
+/* ===== カウント演出 ===== */
 const numEl = document.getElementById("playCountNum");
-let cur = 0;
-const target = CONFIG.playedThisMonth;
 
+/* まず 00 を見せる */
 setTimeout(() => {
-  const timer = setInterval(() => {
-    cur += 1;
-    if (cur >= target) {
-      cur = target;
-      clearInterval(timer);
-    }
-    numEl.textContent = cur;
-  }, 240); // ← ゆっくりに
-}, 4500);
+  numEl.textContent = "00";
+}, 4200);
+
+/* しっかり溜めてから 01 に */
+setTimeout(() => {
+  numEl.textContent = "01";
+}, 5200);
 
 /* 動画解禁 */
 setTimeout(() => {
   document.getElementById("videoWrap").classList.add("active");
-}, 6000);
+}, 6500);
 </script>
 
 </body>
