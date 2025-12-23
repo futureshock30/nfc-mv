@@ -26,7 +26,7 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===== ロゴ＋エディション（固定） ===== */
+/* ===== ロゴ（固定） ===== */
 .logo-area {
   position: fixed;
   top: 6px;
@@ -39,9 +39,52 @@ html, body {
   pointer-events: none;
 }
 
-/* ===== Edition（先に出す） ===== */
+#logo {
+  width: 340px;
+  max-width: 88vw;
+  opacity: 0;
+  transform: translateY(10px) scale(.9);
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
+  animation: logoPop calc(2700ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
+  /* いまのテンポ維持 */
+  animation-delay: calc(1500ms * var(--t));
+}
+
+/* ===== メイン ===== */
+.main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 140px;
+  box-sizing: border-box;
+}
+
+/* ===== 動画 ===== */
+.video-wrap {
+  width: min(92vw, 900px);
+  aspect-ratio: 16 / 9;
+  margin-bottom: 14px; /* ← Editionが下に来るので少し詰める */
+  opacity: 0;
+  transform: translateY(18px) scale(.985);
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
+  animation: videoIn calc(2200ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
+  animation-delay: calc(6000ms * var(--t));
+  pointer-events: none;
+}
+.video-wrap.active { pointer-events: auto; }
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
+
+/* ===== Edition（動画フレームの下） ===== */
 .edition {
-  margin-top: 10px;
+  margin-top: 14px;
   font-size: 15px;
   letter-spacing: 0.14em;
   opacity: 0;
@@ -51,8 +94,10 @@ html, body {
   animation: editionIn calc(1500ms * var(--t)) ease forwards;
   animation-delay: calc(0ms * var(--t));
   overflow: hidden;
+  text-align: center;
 }
 
+/* キラーン */
 .edition::after{
   content:"";
   position:absolute;
@@ -68,7 +113,6 @@ html, body {
   );
   transform: rotate(18deg);
   opacity: 0;
-  /* ★ Editionのあとにキラーン */
   animation: shimmer calc(2800ms * var(--t)) ease forwards;
   animation-delay: calc(600ms * var(--t));
 }
@@ -96,52 +140,7 @@ html, body {
   animation-delay: calc(1000ms * var(--t));
 }
 
-/* ===== ロゴ（Editionの後に出す） ===== */
-#logo {
-  width: 340px;
-  max-width: 88vw;
-  opacity: 0;
-  transform: translateY(10px) scale(.9);
-  filter: drop-shadow(0 12px 40px rgba(0,0,0,.6));
-  animation: logoPop calc(2700ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  /* ★ Edition→キラーンのあとにロゴ */
-  animation-delay: calc(1500ms * var(--t));
-}
-
-/* ===== メイン ===== */
-.main {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 140px;
-  box-sizing: border-box;
-}
-
-/* ===== 動画（最後に出す） ===== */
-.video-wrap {
-  width: min(92vw, 900px);
-  aspect-ratio: 16 / 9;
-  margin-bottom: 72px;
-  opacity: 0;
-  transform: translateY(18px) scale(.985);
-  filter: drop-shadow(0 20px 50px rgba(0,0,0,.6));
-  animation: videoIn calc(2200ms * var(--t)) cubic-bezier(.2,.9,.2,1) forwards;
-  /* ★ 一番最後 */
-  animation-delay: calc(6000ms * var(--t));
-  pointer-events: none;
-}
-.video-wrap.active { pointer-events: auto; }
-
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: #000;
-}
-
-/* ===== カウント（ロゴの後に出す） ===== */
+/* ===== カウント ===== */
 .count {
   text-align: center;
   opacity: 0;
@@ -150,25 +149,30 @@ iframe {
   animation-delay: calc(3600ms * var(--t));
 }
 
-/* 見やすく */
-.count .remaining {
-  font-size: 14px;
-  letter-spacing: 0.18em;
-  color: rgba(255,255,255,.9);
-  margin-bottom: 22px;
-  line-height: 1.6;
-}
-.count .remaining strong { color: #fff; font-weight: 600; }
-
 .count .label {
   font-size: 13px;
   letter-spacing: 0.25em;
   color: var(--muted2);
   margin-bottom: 10px;
 }
+
 .count .num {
   font-size: 56px;
   line-height: 1;
+}
+
+/* ★ YOU CAN PLAY：小さくして一番下 */
+.count .remaining.bottom-note{
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,.7);
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.count .remaining.bottom-note strong {
+  color: #fff;
+  font-weight: 600;
 }
 
 /* ===== アニメーション ===== */
@@ -177,22 +181,29 @@ iframe {
   60%  { opacity:1; transform: translateY(0) scale(1.03); }
   100% { opacity:1; transform: translateY(0) scale(1); }
 }
-@keyframes editionIn { to { opacity:1; transform: translateY(0); } }
+
+@keyframes editionIn {
+  to { opacity:1; transform: translateY(0); }
+}
+
 @keyframes shimmer {
   0%   { opacity:0; left:-60%; }
   20%  { opacity:.9; }
   100% { opacity:0; left:140%; }
 }
+
 @keyframes spark {
   0%   { opacity:0; transform: scale(.4); }
   50%  { opacity:1; transform: scale(1.1); }
   100% { opacity:0; transform: scale(.6); }
 }
+
 @keyframes countPop {
   0%   { opacity:0; transform: translateY(16px) scale(.98); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
   100% { opacity:1; transform: translateY(0) scale(1); }
 }
+
 @keyframes videoIn {
   0%   { opacity:0; transform: translateY(20px) scale(.985); }
   70%  { opacity:1; transform: translateY(0) scale(1.02); }
@@ -209,12 +220,6 @@ iframe {
 <body>
 
 <div class="logo-area">
-  <!-- ★ 順番：Edition → ロゴ -->
-  <div class="edition" id="editionText">
-    Edition 1/300
-    <span class="spark s1"></span>
-    <span class="spark s2"></span>
-  </div>
   <img id="logo" src="./logo.png" alt="Future Shock Logo">
 </div>
 
@@ -227,10 +232,19 @@ iframe {
     </iframe>
   </div>
 
+  <!-- ★ Edition を動画フレームの下に配置 -->
+  <div class="edition" id="editionText">
+    Edition 1/300
+    <span class="spark s1"></span>
+    <span class="spark s2"></span>
+  </div>
+
   <div class="count">
-    <div class="remaining" id="remainingText"></div>
     <div class="label">PLAY COUNT THIS MONTH</div>
     <div class="num" id="playCountNum">0</div>
+
+    <!-- ★ YOU CAN PLAY を小さくして一番下 -->
+    <div class="remaining bottom-note" id="remainingText"></div>
   </div>
 
 </div>
@@ -261,7 +275,6 @@ const numEl = document.getElementById("playCountNum");
 let cur = 0;
 const target = CONFIG.playedThisMonth;
 
-/* countPopが出始める(3600ms*T)ちょい後に開始 */
 setTimeout(() => {
   const timer = setInterval(() => {
     cur += 1;
@@ -270,10 +283,10 @@ setTimeout(() => {
       clearInterval(timer);
     }
     numEl.textContent = cur;
-  }, 240 * T); // ★ 3倍ゆっくり
+  }, 240 * T);
 }, 4500 * T);
 
-/* ===== 動画解禁（最後のタイミングに合わせる） ===== */
+/* 動画解禁 */
 setTimeout(() => {
   document.getElementById("videoWrap").classList.add("active");
 }, 6000 * T);
