@@ -14,35 +14,39 @@
       overflow: hidden;
     }
 
-    /* 画面 */
+    /* 全画面 */
     .screen {
       width: 100%;
       height: 100vh;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    /* ロゴ：中央・超大きめ */
+    /* ロゴ：一番上・大きめ */
+    .logo-area {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+    }
+
     #logo {
-      height: 140px;              /* ← かなり大きく */
+      height: 120px;   /* ← ロゴサイズここ */
       width: auto;
       opacity: 0;
-      transform: translateY(16px) scale(0.95);
-      animation: logoRise 900ms ease forwards;
+      transform: translateY(12px) scale(0.96);
+      animation: logoFadeUp 900ms ease forwards;
       filter: drop-shadow(0 0 28px rgba(255,255,255,0.18));
+    }
+
+    /* 動画：ど真ん中 */
+    #videoArea {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.95);
-      z-index: 3;
-    }
-
-    /* 動画：完全センター */
-    #videoArea {
-      display: none;
+      transform: translate(-50%, -50%);
       width: min(960px, 92vw);
+      display: none;
       z-index: 2;
     }
 
@@ -53,7 +57,7 @@
       background: #000;
     }
 
-    /* カウント：下に固定 */
+    /* カウント：一番下 */
     #countArea {
       position: absolute;
       bottom: 28px;
@@ -61,13 +65,14 @@
       transform: translateX(-50%);
       text-align: center;
       opacity: 0;
+      z-index: 3;
     }
 
     #label {
       font-size: 12px;
       letter-spacing: 0.28em;
       opacity: 0.6;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     #playCount {
@@ -77,8 +82,8 @@
     }
 
     /* アニメーション */
-    @keyframes logoRise {
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    @keyframes logoFadeUp {
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes pop {
@@ -96,8 +101,10 @@
 
   <div class="screen">
 
-    <!-- ロゴ -->
-    <img id="logo" src="./logo.png" alt="Future Shock Logo" />
+    <!-- ロゴ（上） -->
+    <div class="logo-area">
+      <img id="logo" src="./logo.png" alt="Future Shock Logo">
+    </div>
 
     <!-- 動画（中央） -->
     <div id="videoArea">
@@ -127,15 +134,15 @@
     const countArea = document.getElementById("countArea");
     const videoArea = document.getElementById("videoArea");
 
-    // 1) ロゴはCSSで浮上
+    // 1) ロゴはCSSでフェードイン
 
-    // 2) 1秒後：下にカウント表示
+    // 2) 少し遅れてカウント表示（下）
     setTimeout(() => {
       playCount.textContent = currentViewCount;
       countArea.style.animation = "fadeIn 600ms ease forwards";
     }, 1000);
 
-    // 3) 2.2秒後：動画を中央に表示
+    // 3) 動画を中央に表示
     setTimeout(() => {
       videoArea.style.display = "block";
     }, 2200);
