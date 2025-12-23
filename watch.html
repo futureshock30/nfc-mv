@@ -14,63 +14,36 @@
       overflow: hidden;
     }
 
-    /* 画面全体 */
+    /* 画面 */
     .screen {
       width: 100%;
       height: 100vh;
+      position: relative;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
 
-    /* ロゴ：最初は中央で浮かび上がる */
+    /* ロゴ：中央・超大きめ */
     #logo {
-      height: 96px; /* ←ここで大きさ調整（もっと大きくしたければ 96/110） */
+      height: 140px;              /* ← かなり大きく */
       width: auto;
       opacity: 0;
-      transform: translateY(12px) scale(0.98);
+      transform: translateY(16px) scale(0.95);
       animation: logoRise 900ms ease forwards;
-      filter: drop-shadow(0 0 18px rgba(255,255,255,0.12));
-    }
-
-    /* ロゴ：後で上に移動する（クラス付与で発動） */
-    #logo.toTop {
+      filter: drop-shadow(0 0 28px rgba(255,255,255,0.18));
       position: absolute;
-      top: 18px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%) scale(0.92);
-      opacity: 1;
-      animation: logoToTop 650ms ease forwards;
+      transform: translate(-50%, -50%) scale(0.95);
+      z-index: 3;
     }
 
-    /* テキスト類 */
-    #stats {
-      margin-top: 20px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    #label {
-      font-size: 13px;
-      letter-spacing: 0.22em;
-      opacity: 0.65;
-      margin-bottom: 10px;
-    }
-
-    #playCount {
-      font-size: 56px;
-      letter-spacing: 0.05em;
-      animation: pop 450ms ease;
-    }
-
-    /* 動画：真ん中 */
+    /* 動画：完全センター */
     #videoArea {
       display: none;
       width: min(960px, 92vw);
-      margin-top: 18px;
+      z-index: 2;
     }
 
     .video-frame {
@@ -80,14 +53,32 @@
       background: #000;
     }
 
-    /* アニメーション */
-    @keyframes logoRise {
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    /* カウント：下に固定 */
+    #countArea {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0;
     }
 
-    @keyframes logoToTop {
-      from { opacity: 1; }
-      to { opacity: 1; }
+    #label {
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      opacity: 0.6;
+      margin-bottom: 8px;
+    }
+
+    #playCount {
+      font-size: 48px;
+      letter-spacing: 0.06em;
+      animation: pop 450ms ease;
+    }
+
+    /* アニメーション */
+    @keyframes logoRise {
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
     @keyframes pop {
@@ -95,8 +86,8 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
@@ -105,16 +96,10 @@
 
   <div class="screen">
 
-    <!-- ロゴ（最初は中央） -->
+    <!-- ロゴ -->
     <img id="logo" src="./logo.png" alt="Future Shock Logo" />
 
-    <!-- 今月の再生回数 -->
-    <div id="stats">
-      <div id="label">PLAY COUNT THIS MONTH</div>
-      <div id="playCount"></div>
-    </div>
-
-    <!-- MV（最後に真ん中で出す） -->
+    <!-- 動画（中央） -->
     <div id="videoArea">
       <iframe
         class="video-frame"
@@ -123,31 +108,35 @@
       ></iframe>
     </div>
 
+    <!-- カウント（下） -->
+    <div id="countArea">
+      <div id="label">PLAY COUNT THIS MONTH</div>
+      <div id="playCount"></div>
+    </div>
+
   </div>
 
   <script>
     /*
-      ★ここは後でサーバーから差し込む
-      currentViewCount = 今月の再生回数（1〜10）
+      今月の再生回数（仮）
+      後でサーバーから差し込み
     */
-    const currentViewCount = 1; // 仮
+    const currentViewCount = 1;
 
-    const logo = document.getElementById("logo");
-    const stats = document.getElementById("stats");
     const playCount = document.getElementById("playCount");
+    const countArea = document.getElementById("countArea");
     const videoArea = document.getElementById("videoArea");
 
-    // 1) ロゴが浮かび上がる（CSSで自動）
+    // 1) ロゴはCSSで浮上
 
-    // 2) 0.9秒後に「今月の再生回数」を表示
+    // 2) 1秒後：下にカウント表示
     setTimeout(() => {
       playCount.textContent = currentViewCount;
-      stats.style.animation = "fadeUp 550ms ease forwards";
-    }, 900);
+      countArea.style.animation = "fadeIn 600ms ease forwards";
+    }, 1000);
 
-    // 3) 2.2秒後：ロゴを上へ移動して、動画を真ん中に表示
+    // 3) 2.2秒後：動画を中央に表示
     setTimeout(() => {
-      logo.classList.add("toTop");
       videoArea.style.display = "block";
     }, 2200);
   </script>
