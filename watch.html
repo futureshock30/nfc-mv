@@ -1,34 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <title>Watch</title>
+    <meta charset="UTF-8">
+    <title>NFCカウントダウン</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        #logo { margin-top: 50px; }
+        #countdown { font-size: 2em; margin-top: 20px; }
+    </style>
 </head>
+<body>
+    <img id="logo" src="your-logo.png" alt="Future Shock Logo" width="200">
 
-<body style="margin:0;background:black;color:white;display:flex;align-items:center;justify-content:center;height:100vh;font-size:42px;">
-  <div id="msg">CHECKING...</div>
+    <div id="countdown"></div>
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    const key = params.get("key");
-    const msg = document.getElementById("msg");
+    <script>
+        // サーバーから視聴回数を取得する想定で仮の視聴回数をセット（例：3回目の視聴）
+        // 実際にはここをサーバー側で動的に埋め込む
+        const currentViewCount = 3; 
 
-    if (!key) { msg.innerText = "ACCESS DENIED"; throw new Error("no key"); }
-    if (!key.startsWith("nfc-")) { msg.innerText = "ACCESS DENIED"; throw new Error("bad key"); }
+        // 初期値を10から視聴回数分引いた数字にする
+        let count = 10 - currentViewCount;
 
-    const ts = Number(key.replace("nfc-", ""));
-    const ageMs = Date.now() - ts;
-    const maxMs = 3 * 60 * 1000;
+        // カウントダウンを表示
+        document.getElementById('countdown').textContent = count;
 
-    if (!Number.isFinite(ts) || ageMs > maxMs) {
-      msg.innerText = "EXPIRED";
-      throw new Error("expired");
-    }
-
-    msg.innerText = "OPENING...";
-
-    // ✅ 認証OKなら、Google Driveのpreviewへ移動（iPhoneで一番安定）
-    location.href = "https://drive.google.com/file/d/1ST7-S3n3R-TpF4_Fb7mlqj3lHEKvm66q/preview";
-  </script>
+        // 必要ならここでカウントダウン後のアクションを追加
+    </script>
 </body>
 </html>
